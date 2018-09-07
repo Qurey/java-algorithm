@@ -1,0 +1,56 @@
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans=new ArrayList();
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length-3;i++){
+            if(i==0||(i>=0&&nums[i]!=nums[i-1])){
+                List<List<Integer>> rec=new ArrayList();
+                int k=0;
+                rec=threeSum(nums,target-nums[i],i);
+                for(List<Integer> pk:rec){
+                    pk.add(nums[i]);
+                    ans.add(pk);
+                }
+            }
+        }
+        return ans;
+    }
+    
+    
+    public List<List<Integer>> threeSum(int[] num,int tar,int p) {
+        List<List<Integer>> ans=new ArrayList();
+        int[] nums=new int[num.length-p-1];
+        int k=0;
+        for(int j=p+1;j<num.length;j++){
+            nums[k++]=num[j];
+        }
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length-2;i++){
+            if(i==0||(i>=0&&nums[i]!=nums[i-1])){
+            int tmp=tar-nums[i];
+            int low=i+1,high=nums.length-1;
+            while(low<high){
+                if(nums[low]+nums[high]<tmp)
+                    low=low+1;
+                else if(nums[low]+nums[high]>tmp)
+                    high=high-1;
+                else{
+                    List<Integer> ak=new ArrayList();
+                    ak.add(nums[i]);
+                    ak.add(nums[low]);
+                    ak.add(nums[high]);
+                    ans.add(ak);
+                    while (low < high && nums[low] == nums[low+1]) low++;
+                    while (low < high && nums[high] == nums[high-1]) high--;
+                    low++; high--;
+                }
+            }
+            }
+        }
+        
+        return ans;
+    }
+            
+    
+    
+}
