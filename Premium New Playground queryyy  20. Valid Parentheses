@@ -1,0 +1,24 @@
+class Solution {
+    public boolean isValid(String s) {
+        LinkedList<Character> match = new LinkedList();
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='('||s.charAt(i)=='['||s.charAt(i)=='{')
+                match.push(s.charAt(i));
+            else{
+                if(match.isEmpty())
+                    return false;
+                char get = match.pop();
+                if(s.charAt(i)==')'&&get=='('||
+                   s.charAt(i)==']'&&get=='['
+                   ||s.charAt(i)=='}'&&get=='{')
+                    continue;
+                else
+                    return false;
+            }
+        }
+        if(match.isEmpty())
+            return true;
+        else 
+            return false;
+    }
+}
