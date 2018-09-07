@@ -1,0 +1,69 @@
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+// TLE
+//         List<List<Integer>> ans=new ArrayList();
+//         Arrays.sort(nums);
+//         for(int i=0;i<nums.length-2;i++){
+//             for(int j=1+i;j<nums.length-1;j++){
+//                 int tmp=0-nums[i]-nums[j];
+//                 int p=search(nums,j+1,tmp);
+//                 if(p!=-1&&p>i&&p>j){
+//                     List<Integer> can=new ArrayList();
+//                     can.add(nums[i]);
+//                     can.add(nums[j]);
+//                     can.add(nums[p]);
+//                     if(!ans.contains(can))
+//                         ans.add(can);
+//                 }
+//             }
+//         }
+//         return ans;
+//     }
+    
+//     public int search(int[] nums,int start,int k){
+//         int low=start,high=nums.length-1,mid;
+//         if(k<nums[low]||k>nums[high])
+//             return -1;
+//         while(low<=high){
+//             mid=(low+high)/2;
+//             if(nums[mid]==k)
+//                 return mid;
+//             else if(nums[mid]<k){
+//                 low=mid+1;
+//             }
+//             else
+//                 high=mid-1;
+//         }
+//         return -1;
+//     }
+        List<List<Integer>> ans=new ArrayList();
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length-2;i++){
+            if(i==0||(i>=0&&nums[i]!=nums[i-1])){
+            int tmp=0-nums[i];
+            int low=i+1,high=nums.length-1;
+            while(low<high){
+                if(nums[low]+nums[high]<tmp)
+                    low=low+1;
+                else if(nums[low]+nums[high]>tmp)
+                    high=high-1;
+                else{
+                    List<Integer> ak=new ArrayList();
+                    ak.add(nums[i]);
+                    ak.add(nums[low]);
+                    ak.add(nums[high]);
+                    ans.add(ak);
+                    while (low < high && nums[low] == nums[low+1]) low++;
+                    while (low < high && nums[high] == nums[high-1]) high--;
+                    low++; high--;
+                }
+            }
+            }
+        }
+        
+        return ans;
+    }
+            
+    
+    
+}
