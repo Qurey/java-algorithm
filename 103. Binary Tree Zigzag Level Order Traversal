@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans=new ArrayList();
+        if(root==null)
+            return ans;
+        else{
+            LinkedList<TreeNode> p=new LinkedList();
+            LinkedList<Integer> axis=new LinkedList();
+            p.add(root);
+            LinkedList<Integer> p1=new LinkedList();
+            p1.add(root.val);
+            ans.add(p1);
+            root.val=0;
+            while(p.size()>0){
+                TreeNode temp= p.get(0);
+                if(temp.left!=null){
+                    axis.add(temp.left.val);
+                    if(ans.size()<=temp.val+1){
+                        LinkedList<Integer> tmp=new LinkedList();
+                        ans.add(tmp);
+                    }
+                    if((temp.val+1)%2==0)
+                        ans.get(temp.val+1).add(temp.left.val);
+                    else
+                        ans.get(temp.val+1).add(0,temp.left.val);
+                    temp.left.val=temp.val+1;
+                    p.add(temp.left);
+                }
+                if(temp.right!=null){
+                    axis.add(temp.right.val);
+                    if(ans.size()<=temp.val+1){
+                        LinkedList<Integer> tmp=new LinkedList();
+                        ans.add(tmp);
+                    }
+                    if((temp.val+1)%2==0)
+                        ans.get(temp.val+1).add(temp.right.val);
+                    else
+                        ans.get(temp.val+1).add(0,temp.right.val);
+                    temp.right.val=temp.val+1;
+                    p.add(temp.right);
+                }
+                p.remove();
+            }
+        }
+        return ans;
+    }
+}
