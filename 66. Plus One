@@ -1,0 +1,28 @@
+class Solution {
+    public int[] plusOne(int[] digits) {
+        int carry=0,count=0;
+        for(int i=digits.length-1;i>=0;i--){
+            count=digits[i]==9?count+1:count;
+            if(i==digits.length-1){
+                carry=(digits[i]+1)/10;
+                digits[i]=(digits[i]+1)%10;
+            }
+            else if(carry==0)
+                break;
+            else{
+                int tmp=digits[i]+carry;
+                carry=tmp/10;
+                digits[i]=tmp%10;
+            }
+        }
+        if(count==digits.length){
+            int[] ans=new int[count+1];
+            ans[0]=1;
+            for(int i=0;i<count;i++){
+                ans[i+1]=digits[i];
+            }
+            return ans;
+        }
+        return digits;
+    }
+}
