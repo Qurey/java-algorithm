@@ -1,0 +1,29 @@
+class Solution {
+    public boolean search(int[] nums, int target) {
+        // int num=nums.length,pivot=0;
+        // if(num==0)
+        //     return false;
+        // for(int i=0;i<num-1;i++){
+        //     if(nums[i]>nums[i+1]){
+        //         pivot=i+1;
+        //         break;
+        //     }
+        // }
+        Arrays.sort(nums);
+        int num=nums.length;
+        if(num==0)
+            return false;
+        int lo=0,hi=num-1,mi=0;
+        while(lo<=hi){
+            mi=(lo+hi)/2;
+            if(nums[mi]>target)
+                hi--;
+            else if(nums[mi]<target)
+                lo++;
+            else
+                return true;
+        }
+        return false;
+        
+    }
+}
