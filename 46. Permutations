@@ -1,0 +1,41 @@
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        return helper(nums,nums.length-1);
+    }
+    
+    public List<List<Integer>> helper(int[] nums,int index){
+        if(index==0){
+            List<List<Integer>> p = new ArrayList();
+            List<Integer> q = new ArrayList();
+            q.add(nums[0]);
+            p.add(q);
+            return p;
+        }
+        else if(index==1){
+            List<List<Integer>> p = new ArrayList();
+            List<Integer> q = new ArrayList();
+            q.add(nums[0]);
+            q.add(nums[1]);
+            p.add(q);
+            List<Integer> q1 = new ArrayList();
+            q1.add(nums[1]);
+            q1.add(nums[0]);
+            p.add(q1);
+            return p;
+        }
+        List<List<Integer>> p = helper(nums,index-1);
+        List<List<Integer>> ans = new ArrayList();
+        for(int i=0;i<p.size();i++){
+            for(int j=0;j<=index;j++){
+                List<Integer> tmp=new ArrayList<Integer>(p.get(i));
+                // System.out.println(tmp);
+                tmp.add(j,nums[index]);
+                ans.add(tmp);
+                // System.out.println(tmp);
+                // System.out.println("11111111");
+            }
+        }
+        return ans;
+        
+    }
+}
