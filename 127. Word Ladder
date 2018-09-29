@@ -1,0 +1,47 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        if(!wordList.contains(endWord))
+            return 0;
+        Set<String> beginSet = new HashSet();
+        Set<String> endSet = new HashSet();
+        HashSet<String> visited = new HashSet();
+        int len=1;
+        beginSet.add(beginWord);
+        endSet.add(endWord);
+        while(!beginSet.isEmpty()&&!endSet.isEmpty()){
+            HashSet<String> tmp = new HashSet();
+            if(beginSet.size()>endSet.size()){
+                    Set<String> set = beginSet;
+			        beginSet = endSet;
+			        endSet = set;
+            }
+            for(String k : beginSet){
+                char[] word = k.toCharArray();
+                for(int j=0;j<word.length;j++){
+                    for(char c='a';c<='z';c++){
+                        char old = word[j];
+                        word[j] = c;
+                        String s = String.valueOf(word);
+                         if(endSet.contains(s)){
+                             len++;
+                             return len;
+                         }
+                        
+                        if (!visited.contains(s) && wordList.contains(s)) {
+						    tmp.add(s);
+						    visited.add(s);
+                        }
+					    word[j] = old;
+                        
+                    }
+                    
+                }
+            }
+            beginSet = tmp;
+            len++;
+        }
+        
+        return 0;
+        
+    }
+}
