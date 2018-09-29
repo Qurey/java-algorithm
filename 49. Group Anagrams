@@ -1,0 +1,42 @@
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> ans = new ArrayList();
+        for(int i=0;i<strs.length;i++){
+            if(ans.size()==0){
+                List<String> tmp = new ArrayList();
+                tmp.add(strs[i]);
+                ans.add(tmp);
+            }
+            else{
+                int j=0;
+                for(;j<ans.size();j++){
+                    if(check(strs[i],ans.get(j).get(0))){
+                        ans.get(j).add(strs[i]);
+                        break;
+                    }
+                }
+                if(j==ans.size()){
+                    List<String> tmp = new ArrayList();
+                    tmp.add(strs[i]);
+                    ans.add(tmp);
+                }
+            }
+        }
+        return ans;
+    }
+    
+    public boolean check(String tmp,String k){
+        if(tmp.length()!=k.length())
+            return false;
+        int[] num = new int[26];
+        for(int i=0;i<tmp.length();i++)
+            num[tmp.charAt(i)-'a']++;
+        for(int i=0;i<k.length();i++)
+            num[k.charAt(i)-'a']--;
+        for(int i=0;i<tmp.length();i++){
+            if(num[tmp.charAt(i)-'a']!=0)
+                return false;
+        }
+        return true;
+    }
+}
