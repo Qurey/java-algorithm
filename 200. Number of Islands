@@ -1,0 +1,43 @@
+class Solution {
+    public int numIslands(char[][] grid) {
+        int ans=0;
+        if(grid.length==0)
+            return 0;
+        // boolean[][] visited = new boolean[grid.length][grid[0].length];
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[i].length;j++){
+                if(grid[i][j]=='1'){
+                    Queue<Integer> tmp = new LinkedList();
+                    ans++;
+                    tmp.add(i*grid[i].length+j);
+                    while(!tmp.isEmpty()){
+                        int result = tmp.peek();
+                        // visited[result/grid[i].length][result%grid[i].length] = true;
+                        int row = result/grid[i].length;
+                        int col = result%grid[i].length;
+                        grid[row][col] = '0';
+                        if(row+1<grid.length&&grid[row+1][col]=='1'){
+                            tmp.add((row+1)*grid[i].length+col);
+                            grid[row+1][col] = '0';
+                        }
+                        if(col+1<grid[row].length&&grid[row][col+1]=='1'){
+                            tmp.add((row)*grid[row].length+col+1);
+                            grid[row][col+1] = '0';
+                        }
+                        if(col-1>=0&&grid[row][col-1]=='1'){
+                            tmp.add((row)*grid[i].length+col-1);
+                            grid[row][col-1] = '0';
+                        }
+                        if(row-1>=0&&grid[row-1][col]=='1'){
+                            tmp.add((row-1)*grid[i].length+col);
+                            grid[row-1][col] = '0';
+                        }
+                        tmp.remove();
+                    }
+                    
+                }
+            }
+        }
+        return ans;
+    }
+}
