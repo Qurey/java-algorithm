@@ -1,0 +1,96 @@
+
+
+class LRUCache {
+    class DLinkedList{
+        int key;
+        int value;
+        DLinkedList prev;
+        DLinkedList post;
+}
+    
+    private void addNode(DLinkedList node){
+        DLinkedList tmp = node;
+        tmp.post = head.post;
+        head.post.prev = tmp;
+        
+        head.post = tmp;
+        tmp.prev = head;
+    } 
+    
+    private void removeNode(DLinkedList node){
+        DLinkedList tmp = node.prev;
+        tmp.post = node.post;
+        node.post.prev = tmp;
+    }
+    
+    private void moveToHead(DLinkedList node){
+        removeNode(node);
+        addNode(node);
+    }
+    // pop the current tail. 
+    private DLinkedList popTail(){
+	    DLinkedList res = tail.prev;
+    	this.removeNode(res);
+    	return res;
+    }
+    
+    private HashMap<Integer, DLinkedList> cache = new HashMap<Integer, DLinkedList>();
+    private int capacity;
+    private int count = 0;
+    private DLinkedList head,tail;
+    public LRUCache(int capacity) {
+        this.count = 0;
+        this.capacity = capacity;
+        // this.cache = new HashMap<Integer, DLinkedList>();
+        
+        head = new DLinkedList();
+        tail = new DLinkedList();
+        head.prev = null;
+        tail.post = null;
+        
+        head.post = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        DLinkedList tmp = this.cache.get(key);
+        if(tmp==null){
+            return -1;
+        }
+        else{
+            this.moveToHead(tmp);
+            return tmp.value;
+        }
+    }
+    
+    public void put(int key, int value) {
+        DLinkedList tmp = cache.get(key);
+        
+        if(tmp==null){
+            DLinkedList newNode = new DLinkedList();
+            newNode.key = key;
+            newNode.value = value;
+            this.addNode(newNode);
+            this.cache.put(key,newNode);
+            
+            count++;
+            
+            if(count>this.capacity){
+                DLinkedList temp = this.popTail();
+                cache.remove(temp.key);
+                count--;
+            }
+        }
+        else{
+            tmp.value = value;
+            this.moveToHead(tmp);
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
