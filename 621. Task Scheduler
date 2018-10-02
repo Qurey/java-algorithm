@@ -1,0 +1,22 @@
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int[] mem = new int[26];
+        for(char i : tasks)
+            mem[i-'A']++;
+        int time=0;
+        Arrays.sort(mem);
+        while(mem[25]>0){
+            int i=0;
+            while(i<=n){
+                if(mem[25]==0)
+                    break;
+                if (i<26 && mem[25-i] > 0)
+                    mem[25 - i]--;
+                i++;
+                time++;
+            }
+            Arrays.sort(mem);
+        }
+        return time;
+    }
+}
