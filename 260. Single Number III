@@ -1,0 +1,18 @@
+class Solution {
+    public int[] singleNumber(int[] nums) {
+        int ans = 0;
+        for(int i=0;i<nums.length;i++){
+            ans ^= nums[i]; 
+        }
+        ans &= -ans;
+        int[] tmp = new int[2];
+        for(int k : nums){
+            if((k & ans) ==0){
+                tmp[0] ^= k;
+            }
+            else
+               tmp[1] ^= k; 
+        }
+        return tmp;
+    }
+}
