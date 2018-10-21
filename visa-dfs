@@ -1,0 +1,63 @@
+public class Main {
+
+    public static void main(String[] args) {
+        List<String> res=new ArrayList();
+        res=findSchedules(24, 8,"??8");
+        System.out.println(res);
+    }
+
+    public static List<String> findSchedules(int workHours, int dayHours, String pattern) {
+        int count=pattern.length();
+        for(int i=0;i<pattern.length();i++){
+            if(pattern.charAt(i)!='?'){
+                count--;
+                workHours-=Integer.parseInt(pattern.substring(i,i+1));
+            }
+        }
+        List<List<Integer>> ans=new ArrayList();
+        System.out.println(count);
+        System.out.println(workHours);
+        dfs(ans,workHours,dayHours,count,new ArrayList());
+        System.out.println(ans);
+        List<String> res=new ArrayList();
+        for(int i=0;i<ans.size();i++){
+            int k=0;
+            String s="";
+            for(int j=0;j<pattern.length();j++){
+                if(pattern.charAt(j)!='?')
+                    s=s+pattern.substring(j,j+1);
+                else{
+                    s=s+String.valueOf(ans.get(i).get(k));
+                    k++;
+                }
+            }
+            res.add(s);
+        }
+        return res;
+
+    }
+
+    public static void dfs(List<List<Integer>> ans,int workHours, int dayHours,int count, List<Integer> tmp){
+        if(count==0&&workHours==0){
+            ans.add(new ArrayList(tmp));
+            return;
+        }
+        else if(count==0)
+            return;
+        if(dayHours*count<workHours)
+            return;
+        if(workHours<0)
+            return;
+        for(int i=0;i<=dayHours;i++){
+            tmp.add(i);
+            workHours-=i;
+            count--;
+            dfs(ans,workHours,dayHours,count,tmp);
+            workHours+=i;
+            count++;
+            tmp.remove(tmp.size()-1);
+        }
+        return;
+    }
+
+}
