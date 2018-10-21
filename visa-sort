@@ -1,0 +1,22 @@
+class solution{
+ String mmm[]={"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dex"};
+    String[] dates = {"29 Oct 1933", "23 Oct 1933", "08 Oct 1933"};
+    List<String> arr = new ArrayList<String>(Arrays.asList(mmm));
+    Arrays.sort(dates, new Comparator<String>() {
+        public int compare(String node1, String node2) {
+        String tmp1[] = node1.split(" ");
+        String tmp2[] = node2.split(" ");
+        if (Integer.parseInt(tmp1[2]) == Integer.parseInt(tmp2[2])) {
+        if (arr.indexOf(tmp1[1]) == arr.indexOf(tmp2[1]))
+        return Integer.parseInt(tmp1[0]) - Integer.parseInt(tmp2[0]);
+        else {
+        return arr.indexOf(tmp1[1]) - arr.indexOf(tmp2[1]);
+        }
+        }
+        else
+        return Integer.parseInt(tmp1[2]) - Integer.parseInt(tmp2[2]);
+        }
+        });
+
+        System.out.println(dates[1]);
+}
