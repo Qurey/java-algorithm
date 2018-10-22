@@ -1,0 +1,77 @@
+
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        int tmp;
+        tmp = solution("15:15:15","15:15:15");
+        System.out.println(tmp);
+    }
+
+    public static int solution(String S, String T){
+        String[] start = S.split(":");
+        String[] end = S.split(":");
+        int startm = Integer.parseInt(start[1]), starts = Integer.parseInt(start[2]), count=0;
+        System.out.println(startm);
+        System.out.println(starts);
+        for(int i = Integer.parseInt(start[0]);i<Integer.parseInt(end[0]);i++){
+            for(int j = startm;j<=59;j++){
+                for(int k = starts;j<=59;j++){
+                    if(check(i,j,k))
+                        count++;
+                }
+                starts = 0;
+            }
+            startm = 0;
+        }
+
+
+        if(Integer.parseInt(start[0])<Integer.parseInt(end[0])) {
+            for (int i = 0; i <= Integer.parseInt(end[1]); i++) {
+                for (int j = 0; j <= Integer.parseInt(end[2]); j++) {
+                    if (check(Integer.parseInt(end[0]), i, j))
+                        count++;
+                }
+            }
+        }
+        else{
+            starts = Integer.parseInt(start[2]);
+            for (int i = Integer.parseInt(start[1]); i <= Integer.parseInt(end[1]); i++) {
+                for (int j = starts; j <= Integer.parseInt(end[2]); j++) {
+                    if (check(Integer.parseInt(end[0]), i, j))
+                        count++;
+                }
+                starts = 0;
+            }
+
+        }
+        return count;
+    }
+
+
+    public static boolean check(int h, int m, int s){
+        HashSet<Integer> dic = new HashSet<Integer>();
+        int[] num = {h,m,s};
+        for(int i=0;i<num.length;i++){
+            if(num[i]/10>0){
+                dic.add(num[i]/10);
+                dic.add(num[i]%10);
+            }
+            else{
+                dic.add(num[i]);
+                dic.add(0);
+            }
+        }
+        if(dic.size()<=2)
+            return true;
+        else
+            return false;
+
+    }
+}
+
+
+
+
+
