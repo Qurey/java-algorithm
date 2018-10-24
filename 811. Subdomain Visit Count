@@ -1,0 +1,29 @@
+class Solution {
+    public List<String> subdomainVisits(String[] cpdomains) {
+        List<String> ans = new ArrayList();
+        HashMap<String, Integer> dic = new HashMap();
+        for(String tmp : cpdomains){
+            int i=0;
+            for(;Character.isDigit(tmp.charAt(i));i++);
+            int num = Integer.valueOf(tmp.substring(0,i)).intValue();
+            for(;Character.isDigit(tmp.charAt(i))||tmp.charAt(i)==' ';i++);
+            String tmp1 = tmp.substring(i);
+            String[] dom = tmp1.split("\\.");
+            if(dom.length==2){
+                dic.put(tmp1,dic.getOrDefault(tmp1,0)+num);
+                dic.put(dom[1],dic.getOrDefault(dom[1],0)+num);
+            }
+            else if(dom.length==3){
+                dic.put(tmp1,dic.getOrDefault(tmp1,0)+num);
+                dic.put(dom[2],dic.getOrDefault(dom[2],0)+num);
+                int j = 0;
+                for(;tmp1.charAt(j)!='.';j++);
+                dic.put(tmp1.substring(j+1),dic.getOrDefault(tmp1.substring(j+1),0)+num);    
+            }
+        }
+        dic.forEach((k,v) -> {
+                ans.add(v+" "+k);
+            });
+        return ans;
+    }
+}
