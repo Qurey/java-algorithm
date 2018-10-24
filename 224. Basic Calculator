@@ -1,0 +1,26 @@
+class Solution {
+    public int calculate(String s) {
+        int tmp=0, res=0, sign=1;
+        Stack<Integer> dic = new Stack();
+        dic.push(sign);
+        for(int i=0;i<s.length();i++){
+            char c = s.charAt(i);
+            if(Character.isDigit(c)){
+                tmp = tmp * 10 + c - '0'; 
+            }
+            else if(c == '+' || c == '-'){
+                res += sign * tmp;
+                sign = dic.peek() * (c == '+' ? 1 : -1);
+                tmp = 0;
+            }
+            else if(c == '('){
+                dic.push(sign);
+            }
+            else if(c == ')'){
+                dic.pop();
+            }
+        }
+        res += sign * tmp;
+        return res;
+    }
+}
