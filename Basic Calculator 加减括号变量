@@ -1,0 +1,135 @@
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.*;
+
+//input string has +, - , (, ),  and 字符 / 字串变量
+//        code = {
+//        e : 1,
+//        y : 2,.
+//        temperature : 5
+//        }
+//        input string:
+//        (e + 8) - pressure + 3 - temperature
+
+class cell{
+    int sum;
+    int sign;
+    String str;
+    public cell(int s, int sign, String str){
+        this.sum=s;
+        this.sign=sign;
+        this.str=str;
+    }
+}
+public class Main {
+
+    public static void main(String[] args) {
+        HashMap<String,Integer> dic=new HashMap<>();
+        dic.put("e",1);
+        dic.put("y",2);
+        dic.put("temperature",5);
+        String s=expresscalculator("(e + 8) - pressure + 3 - temperature",dic);
+        System.out.println(s);
+
+    }
+
+    public static String expresscalculator(String input, Map<String,Integer> map) {
+        if (input == null || input.length() == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        String simple = simplify(input, map);
+        simple = simple.replaceAll(" ", "");
+        Stack<cell> dic=new Stack();
+        int sign=1,num=0,sum=0;
+        for(int i=0;i<simple.length();i++){
+            char c=simple.charAt(i);
+            if(Character.isDigit(c)){
+                num=num*10+c-'0';
+            }
+            else if(c=='+'||c=='-'){
+                sum+=num*sign;
+                sign=(c=='+')?1:-1;
+                num=0;
+            }
+            else if(c>='a'&&c<='z'){
+                char t=(sign==1)?'+':'-';
+                sb.append(t);
+                while(i<simple.length()&&simple.charAt(i)>='a'&&simple.charAt(i)<='z'){
+                    sb.append(simple.charAt(i));
+                    i++;
+                }
+                i--;
+            }
+            else if(c=='('){
+                dic.push(new cell(sum,sign,sb.toString()));
+                sum=0;
+                sign=1;
+                sb=new StringBuilder();
+            }
+            else if(c==')'){
+                cell pre=dic.pop();
+                sum+=num*sign;
+                sum=pre.sign*sum+pre.sum;
+                StringBuilder k=new StringBuilder();
+                k.append(pre.str);
+                if(sb.length()>0){
+                    k.append(update(pre.sign,sb.toString()));
+                }
+                sb=k;
+                num=0;
+                sign=1;
+
+            }
+
+        }
+        sum+=num*sign;
+//        sb.insert(0,'+');
+        sb.insert(0,sum);
+        return sb.toString();
+    }
+
+    public static String update(int sign, String s){
+        StringBuilder sb=new StringBuilder();
+        if(sign==1)
+            return s;
+        for(int i=0;i<s.length();i++){
+            char c=s.charAt(i);
+            if(c=='+')
+                sb.append('-');
+            else if(c=='-')
+                sb.append('+');
+            else
+                sb.append(c);
+
+        }
+        return sb.toString();
+    }
+
+    public static String simplify(String input, Map<String,Integer> map) {
+        StringBuilder s = new StringBuilder();
+        for(int i=0;i<input.length();i++) {
+            if(input.charAt(i)>='a'&&input.charAt(i)<='z'){
+                StringBuilder tmp = new StringBuilder();
+                tmp.append(input.charAt(i));
+                i++;
+                while(i<input.length()&&input.charAt(i)>='a'&&input.charAt(i)<='z'){
+                    tmp.append(input.charAt(i));
+                    i++;
+                }
+                if(map.containsKey(tmp.toString())){
+                    s.append(map.get(tmp.toString()));
+                }
+                else
+                    s.append(tmp);
+                i--;
+            }
+            else{
+                s.append(input.charAt(i));
+            }
+        }
+        return s.toString();
+    }
+
+}
