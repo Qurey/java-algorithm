@@ -1,0 +1,42 @@
+class Solution {
+    public int numSubarraysWithSum(int[] A, int S) {
+        int[] sum=new int[A.length];
+        int k=0;
+        for(int i=0;i<A.length;i++){
+            k+=A[i];
+            sum[i]=k;
+        }
+        k=0;
+        for(int i=0;i<A.length;i++){
+            for(int j=i;j<A.length;j++){
+                if(sum[j]-sum[i]+A[i]==S){
+                    k++;
+                }
+            }
+        }
+        return k;
+        
+    }
+}
+
+
+//         int sum=0,count=0,ans=0;
+//         for(int i=0;i<A.length&&(A.length-i)>=S;i++){
+//             count=0;
+//             sum=0;
+//             for(int j=i;j<A.length&&(A.length-j+sum)>=S;j++){
+//                 sum+=A[j];
+//                 if(sum==S){
+//                     while(j<A.length&&sum==S){
+//                         j++;
+//                         if(j<A.length)
+//                             sum+=A[j];
+//                         count++;
+//                     }
+//                     ans+=count;
+//                     j--;
+                    
+//                 }
+//             }
+//         }
+//         return ans;
