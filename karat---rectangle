@@ -1,0 +1,76 @@
+//import java.math.RoundingMode;
+//import java.text.DecimalFormat;
+import java.util.*;
+
+class cell{
+    int sum;
+    int sign;
+    String str;
+    public cell(int s, int sign, String str){
+        this.sum=s;
+        this.sign=sign;
+        this.str=str;
+    }
+}
+
+
+
+
+public class Main {
+
+    public static void main(String[] args) {
+//        List<List<String>> ans = new ArrayList();
+//        String[] i = {"3234.html", "xys.html", "7hsaa.html"};
+//        String[] j = {"3234.html", "sdhsfjdsh.html", "xys.html", "7hsaa.html"};
+//        ans.add(Arrays.asList(i));
+//        ans.add(Arrays.asList(j));
+        int[][] matrix = {
+                {1, 1, 1, 1, 1, 1},
+                {0, 0, 1, 0, 1, 1},
+                {0, 0, 1, 0, 1, 0},
+                {1, 1, 1, 0, 1, 0},
+                {1, 0, 0, 1, 1, 1}
+        };
+        System.out.println(getRect(matrix));
+    }
+
+    public static List<List<List<Integer>>> getRect(int[][] matrix){
+        List<List<List<Integer>>> ans=new ArrayList();
+        for(int i=0;i<matrix.length;i++){
+            for(int j=0;j<matrix[0].length;j++){
+                if(matrix[i][j]==0){
+                    List<List<Integer>> res=new ArrayList();
+                    int[] cor=new int[4];
+                    cor[0]=i;
+                    cor[1]=j;
+                    cor[2]=i;
+                    cor[3]=j;
+                    dfs(matrix,res,i,j);
+                    ans.add(res);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static void dfs(int[][] matrix, List<List<Integer>> res, int row,int col){
+        if(row<0||row>=matrix.length||col<0||col>=matrix[0].length||matrix[row][col]!=0){
+            return;
+        }
+        int dics[][]={{1,0},{-1,0},{0,1},{0,-1}};
+        List<Integer> t=new ArrayList();
+        t.add(row);
+        t.add(col);
+        res.add(t);
+        matrix[row][col]=2;
+        for(int dic[]:dics ) {
+            int r = row + dic[0];
+            int c = col + dic[1];
+            dfs(matrix, res, r, c);
+        }
+    }
+
+
+}
+
+
