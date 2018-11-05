@@ -1,0 +1,104 @@
+//import java.math.RoundingMode;
+//import java.text.DecimalFormat;
+import java.util.*;
+
+class cell{
+    int sum;
+    int sign;
+    String str;
+    public cell(int s, int sign, String str){
+        this.sum=s;
+        this.sign=sign;
+        this.str=str;
+    }
+}
+
+
+//Example 2:
+//        Input:
+//        ["900 google.mail.com", "50 yahoo.com", "1 intel.mail.com", "5 wiki.org"]
+//        Output:
+//        ["901 mail.com","50 yahoo.com","900 google.mail.com","5 wiki.org","5 org","1 intel.mail.com","951 com"]
+//        Explanation:
+//        We will visit "google.mail.com" 900 times, "yahoo.com" 50 times, "intel.mail.com" once and "wiki.org" 5 times. For the subdomains, we will visit "mail.com" 900 + 1 = 901 times, "com" 900 + 50 + 1 = 951 times, and "org" 5 times.
+
+public class Main {
+
+    public static void main(String[] args) {
+//        HashMap<String,Integer> dic=new HashMap<>();
+//        dic.put("e",1);
+//        dic.put("y",2);
+//        dic.put("temperature",5);
+//        String s=expresscalculator("(e + 8) - pressure + 3 - temperature",dic);
+//        System.out.println(s);
+//        List<String> ans=new ArrayList<String>();
+//        ans.add("900 google.mail.com");
+//        ans.add("50 yahoo.com");
+//        ans.add("1 intel.mail.com");
+//        ans.add("5 wiki.org");
+//        System.out.println(subdomainVisits(ans));
+        List<List<String>> ans = new ArrayList();
+        String[] i = {"3234.html", "xys.html", "7hsaa.html"};
+        String[] j = {"3234.html", "sdhsfjdsh.html", "xys.html", "7hsaa.html"};
+        ans.add(Arrays.asList(i));
+        ans.add(Arrays.asList(j));
+        System.out.println(lcs(ans));
+    }
+
+    public static List<String> lcs(List<List<String>> ans){
+        List<String> res=new ArrayList<String>();
+        int index=0,max=0;
+        int[][] dp=new int[ans.get(0).size()+1][ans.get(1).size()+1];
+        for(int i=0;i<=ans.get(0).size();i++){
+            for(int j=0;j<=ans.get(1).size();j++) {
+                if(i==0||j==0) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                if(ans.get(0).get(i-1).equals(ans.get(1).get(j-1))) {
+                    dp[i][j]=dp[i-1][j-1]+1;
+                    if(dp[i][j]>max){
+                        index=i-1;
+                        max=dp[i][j];
+                    }
+                }
+                else{
+                    dp[i][j]=0;
+                }
+            }
+        }
+
+        for(int i=index-max+1;i<=index;i++){
+            res.add(ans.get(0).get(i));
+        }
+        return res;
+
+    }
+
+}
+
+
+
+
+//    public static List<String> subdomainVisits(List<String> ans){
+//        List<String> res=new ArrayList<String>();
+//        HashMap<String,Integer> map=new HashMap<String,Integer>();
+//        for(String s:ans){
+//            String[] str=s.split(" ");
+//            int num=Integer.valueOf(str[0]);
+//            String[] domain=str[1].split("\\.");
+//            StringBuilder sb=new StringBuilder();
+//            for(int i=domain.length-1;i>=0;i--){
+//                if(i!=domain.length-1)
+//                    sb.insert(0,".");
+//                sb.insert(0,domain[i]);
+//                map.put(sb.toString(),map.getOrDefault(sb.toString(),0)+num);
+//            }
+//        }
+//        map.forEach((k,v)->{
+//            StringBuilder sb=new StringBuilder();
+//            sb.append(k+" "+v);
+//            res.add(sb.toString());
+//        });
+//        return res;
+//    }
