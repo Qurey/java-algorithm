@@ -1,0 +1,41 @@
+int countPrimes(int n) {
+    // int *notPrime;
+    // notPrime=calloc(n,sizeof(int));
+    // int count=0;
+    // if(n==1||n==0)
+    //     return 0;
+    // for(int i=2;i<n;i++){
+    //     if(notPrime[i]==0)
+    //         count++;
+    //     for(int j=2;i*j<n;j++)
+    //         notPrime[i*j]=1;
+    // }
+    // free(notPrime);
+    // return count;
+    
+    
+    bool *notPrime;
+  int i, j, count = 1;
+
+  if (n <= 2)
+    return 0;
+
+  notPrime = calloc(n, sizeof(bool));
+  for (i = 3; i * i < n; i += 2) {
+    if (notPrime[i])
+      continue;
+
+    for (j = i * i; j < n; j += 2 * i)
+      notPrime[j] = true;
+  }
+
+  for (i = 3; i < n; i += 2) {
+    if (!notPrime[i])
+      ++count;
+  }
+
+  free(notPrime);
+  return count;
+}
+
+
