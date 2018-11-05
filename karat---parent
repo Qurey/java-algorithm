@@ -1,0 +1,206 @@
+//import java.math.RoundingMode;
+//import java.text.DecimalFormat;
+import java.util.*;
+
+class cell{
+    int sum;
+    int sign;
+    String str;
+    public cell(int s, int sign, String str){
+        this.sum=s;
+        this.sign=sign;
+        this.str=str;
+    }
+}
+
+
+
+
+public class Main {
+
+    public static void main(String[] args) {
+//        List<List<String>> ans = new ArrayList();
+//        String[] i = {"3234.html", "xys.html", "7hsaa.html"};
+//        String[] j = {"3234.html", "sdhsfjdsh.html", "xys.html", "7hsaa.html"};
+//        ans.add(Arrays.asList(i));
+//        ans.add(Arrays.asList(j));
+        int[][] edge={{1,4}, {1,5}, {2,5}, {3,6}, {6,7}};
+        int[] p={0,0};
+        HashMap<Integer,List<Integer>> map=new HashMap();
+        for(int i=0;i<edge.length;i++){
+            List<Integer> tmp=map.get(edge[i][1]);
+            if(tmp==null)
+                tmp=new ArrayList<Integer>();
+            tmp.add(edge[i][0]);
+            map.put(edge[i][1],tmp);
+            tmp=map.get(edge[i][0]);
+            if(tmp==null)
+                tmp=new ArrayList<Integer>();
+            map.put(edge[i][0],tmp);
+        }
+        highestParent(map,7,p,0);
+        System.out.println(p[0]);
+    }
+
+    public static void highestParent(HashMap<Integer,List<Integer>> map,int a,int[] p,int step){
+        List<Integer> tmp=map.get(a);
+        if(step>p[0]){
+            p[0]=step;
+            p[1]=a;
+        }
+        if(tmp!=null&&tmp.size()>0){
+            for(int k:tmp){
+                highestParent(map,k,p,step+1);
+            }
+        }
+    }
+
+
+
+//    public static List<Integer> findparent(int[][] edge){
+//        List<Integer> res=new ArrayList<Integer>();
+//        HashMap<Integer,List<Integer>> map=new HashMap();
+//        for(int i=0;i<edge.length;i++){
+//            List<Integer> tmp=map.get(edge[i][1]);
+//            if(tmp==null)
+//                tmp=new ArrayList<Integer>();
+//            tmp.add(edge[i][0]);
+//            map.put(edge[i][1],tmp);
+//            tmp=map.get(edge[i][0]);
+//            if(tmp==null)
+//                tmp=new ArrayList<Integer>();
+//            map.put(edge[i][0],tmp);
+//        }
+//        map.forEach((k,v)->{
+//            if(v.size()==0||v.size()==1)
+//                res.add(k);
+//        });
+//        return res;
+//
+//    }
+
+//    public static boolean hasCommon(int[][] edge,int a,int b){
+//        HashMap<Integer,List<Integer>> map=new HashMap();
+//        for(int i=0;i<edge.length;i++){
+//            List<Integer> tmp=map.get(edge[i][1]);
+//            if(tmp==null)
+//                tmp=new ArrayList<Integer>();
+//            tmp.add(edge[i][0]);
+//            map.put(edge[i][1],tmp);
+//            tmp=map.get(edge[i][0]);
+//            if(tmp==null)
+//                tmp=new ArrayList<Integer>();
+//            map.put(edge[i][0],tmp);
+//        }
+//        HashSet<Integer> listA=new HashSet<Integer>();
+//        HashSet<Integer> listB=new HashSet<Integer>();
+//        getall(map,a,listA);
+//        getall(map,b,listB);
+//        for(int p:listB){
+//            if(listA.contains(p))
+//                return true;
+//        }
+//        return false;
+//
+//    }
+
+    public static void getall(HashMap<Integer,List<Integer>> map,int a,HashSet<Integer> lista){
+        List<Integer> tmp=map.get(a);
+        if(tmp==null||tmp.size()==0)
+            return;
+        for(int p:tmp){
+            lista.add(p);
+            getall(map,p,lista);
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+//
+//1     2  3
+//        /  \  /      \
+//        4    5        6
+//        \
+//        7
+//        输入是int[][] input, input[0]是input[1] 的parent，比如 {{1,4}, {1,5}, {2,5}, {3,6}, {6,7}}会形成上面的图
+//        第一问是只有0个parents和只有1个parent的节点
+//        第二问是 两个指定的点有没有公共祖先
+//        第三问是就一个点的最远祖先，如果有好几个就只需要输出一个就好，举个栗子，这里5的最远祖先可以是1或者2，输出任意一个就可以
+//        ++
+//        时间很紧，一个钟头基本上说说oa的思路就过去一刻钟了，然后昨晚还要分析时间复杂度和空间辅助度
+//        List<Integer> findparent(int[][] edges){
+//        If(edges==null || edges.length==0) {
+//        Return new ArrayList<>();
+//        }
+//        Map<Integer,List<Integer>> map = new HashMap<>();
+//        Map<Integer,Integer> indegreemap = new HashMap<>();
+//        For(int[] edge : edges) {
+//        List<Integer> list = map.get(edge[1]);
+//        If(list == null) {
+//        List = new ArrayList<>();
+//        }
+//        List.add(edge[0]);
+//        Map.put(edge[1],list);
+//        List = map.get(edge[0]);
+//        If(list == null) {
+//        List = new ArrayList<>();
+//        }
+//        Map.put(edge[0],list);
+//        }
+//        For(Map.Entry<Integer,List<Integer>> entry: indegreemap.entrySet()){
+//        If(entry.getValue().size()==0) {
+//        Res1.add(entry.getKey());
+//        }else if (entry.getValue().size()==1) {
+//        Res2.add(entry.getKey());
+//        }
+//        }
+//        }
+//
+//        Private Boolean hascommon(int[][] edges, int a, int b) {
+//
+//        Set<Integer> a_parent= new HashSet<>();
+//        getall(map,a,a-parent);
+//        Set<Integer> b_parent = new HashSet<>();
+//        getall(map,b,b_parent);
+//
+//
+//        For(int n: bparent) {
+//        If(a_parent.contains(n)) {
+//        Return true;
+//        }
+//        }
+//        Return false;
+//        }
+//        Private void getall(Map<Integer,List<Integer>> map, int a, Set<Integer> parent) {
+//        List<Integer> list = map.get(a);
+//        If(list == null || list.size()==0) {
+//        Return;
+//        }
+//        For(int p : list) {
+//        Parent.add(p);
+//        Getall(map,p,parent);
+//        }
+//        }
+//
+//        Private void highestparent(Map<Integer,List<Integer>> map, int a, int[] p, int step) {
+//        List<Integer> next = map.get(a);
+//        if(step>p[0]) {
+//        p[0]=step;
+//        p[1]=a;
+//        }
+//        If(next!=null && next.size()>0) {
+//        For(int pa:next) {
+//        Highestparent(map,pa,p,step+1);
+//        }
+//        }
+//        }
+//
+
