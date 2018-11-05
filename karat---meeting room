@@ -1,0 +1,54 @@
+//import java.math.RoundingMode;
+//import java.text.DecimalFormat;
+import java.util.*;
+
+class cell{
+    int sum;
+    int sign;
+    String str;
+    public cell(int s, int sign, String str){
+        this.sum=s;
+        this.sign=sign;
+        this.str=str;
+    }
+}
+
+
+class attend implements Comparator<List<Integer>>{
+
+    public int compare(List<Integer> a,List<Integer> b){
+
+        return a.get(0)-b.get(0);
+
+    }
+
+}
+
+
+public class Main {
+
+    public static void main(String[] args) {
+        List<List<Integer>> ans=new ArrayList();
+        ans.add(Arrays.asList(15,20));
+        ans.add(Arrays.asList(0,3));
+        ans.add(Arrays.asList(5,10));
+        List<Integer> start=new ArrayList();
+        start.add(9);
+        start.add(14);
+        System.out.println(canAttend(ans,start));
+    }
+
+
+    public static boolean canAttend(List<List<Integer>> ans,List<Integer> start){
+        Collections.sort(ans,new attend());
+        for(int i=0;i<ans.size()-1;i++){
+            if(start.get(0)>=ans.get(i).get(1)&&start.get(1)<=ans.get(i+1).get(0))
+                return true;
+        }
+        return false;
+    }
+
+
+}
+
+
