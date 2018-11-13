@@ -1,0 +1,47 @@
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ * };
+ */
+/**
+ * Return an array of size *returnSize.
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+// int comparator(struct Interval *a,struct Interval *b){
+//        return (a->start)-(b->start); 
+//     }
+
+int max(int n, int m) {
+  return n > m ? n : m;
+}
+int comparator(struct Interval* v1, struct Interval* v2) {
+  struct Interval* p1 = (struct Interval*) v1;
+  struct Interval* p2 = (struct Interval*) v2;
+  return (p1 -> start) - (p2 -> start);
+}
+
+struct Interval* merge(struct Interval* intervals, int size, int* returnSize) {
+    if(size==0){
+        returnSize=0;
+        return NULL;
+    }
+    int cur=0;
+    int i=1;
+    qsort(intervals,size,sizeof(struct Interval*),comparator);
+    for(i=1;i<size;i++){
+        if(intervals[i].start<=intervals[cur].end){
+            intervals[cur].end=max(intervals[cur].end,intervals[i].end);
+        }
+        else{
+            cur++;
+            intervals[cur].start=intervals[i].start;
+            intervals[cur].end=intervals[i].end;
+        }
+    }
+    *returnSize=cur+1;
+    return intervals;
+    
+}
+
