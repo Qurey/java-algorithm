@@ -1,0 +1,17 @@
+void rotate(int** matrix, int matrixRowSize, int *matrixColSizes) {
+    int tmp=0,i=0,j=0;
+    for(i=0;i<matrixRowSize/2;i++){
+        for(j=0;j<matrixRowSize;j++){
+            tmp=matrix[i][j];
+            matrix[i][j]=matrix[matrixRowSize-1-i][j];
+            matrix[matrixRowSize-1-i][j]=tmp;
+        }
+    }
+    for(i=0;i<matrixRowSize;i++){
+        for(j=i+1;j<matrixRowSize;j++){
+            tmp=matrix[i][j];
+            matrix[i][j]=matrix[j][i];
+            matrix[j][i]=tmp;
+        }
+    }
+}
