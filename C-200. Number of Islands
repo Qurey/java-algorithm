@@ -1,0 +1,27 @@
+int dic1[]={1,-1,0,0};
+int dic2[]={0,0,1,-1};
+int numIslands(char** grid, int gridRowSize, int gridColSize) {
+    int count=0,i=0,j=0;
+    for(i=0;i<gridRowSize;i++){
+        for(j=0;j<gridColSize;j++){
+            if(grid[i][j]=='1'){
+                count++;
+                dfs(grid,i,j,gridRowSize,gridColSize);
+            }
+        }
+    } 
+    return count;
+}
+
+void dfs(char** grid, int i,int j,int gridRowSize, int gridColSize){
+    int k=0;
+    grid[i][j]='2';
+    for(k=0;k<sizeof(dic1)/sizeof(dic1[0]);k++){
+        if(i+dic1[k]>=0&&i+dic1[k]<gridRowSize&&j+dic2[k]>=0&&j+dic2[k]<gridColSize
+          &&grid[i+dic1[k]][j+dic2[k]]=='1')
+            dfs(grid,i+dic1[k],j+dic2[k],gridRowSize,gridColSize);
+    }
+    return;
+    
+}
+
