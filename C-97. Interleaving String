@@ -1,0 +1,15 @@
+#define MAXN 2048
+bool dp[MAXN][MAXN];
+bool isInterleave(char* a, char* b, char* c) {
+    int alen=strlen(a),blen=strlen(b),clen=strlen(c),i=0,j=0;
+    if(alen+blen!=clen)
+        return false;
+    dp[0][0]=true;
+    for(i=1;i<=clen;i++){
+        dp[i][0]=dp[i-1][0]&&(a[i-1]==c[i-1]);
+        dp[0][i]=dp[0][i-1]&&(b[i-1]==c[i-1]);
+        for(j=i>alen?i-alen:1;j<i&&j<=blen;j++)
+            dp[i-j][j]=(dp[i-j-1][j]&&a[i-j-1]==c[i-1])||(dp[i-j][j-1]&&b[j-1]==c[i-1]);
+    }
+    return dp[alen][blen];
+}
