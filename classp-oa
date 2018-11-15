@@ -1,0 +1,56 @@
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        HashMap<String,Integer> dic=new HashMap<>();
+        String s="  1A     2B     3D 4G";
+        System.out.println(seats(10,s));
+
+    }
+
+    public static int seats(int N,String s){
+        HashMap<Integer,HashSet<Character>[]> dic=new HashMap<>();
+        s=s.trim();
+        String[] sb=s.split(" +");
+        int count=0;
+        for(int i=0;i<sb.length;i++){
+//            System.out.println(sb[i]);
+            int j=0,num=0;
+            while(j<sb[i].length()&&Character.isDigit(sb[i].charAt(j))){
+                num=num*10+sb[i].charAt(j)-'0';
+                j++;
+            }
+            HashSet<Character> tmp[]=new HashSet[3];
+            if(dic.containsKey(num)){
+                tmp=dic.get(num);
+            }
+            else{
+                tmp[0]=new HashSet<Character>();
+                tmp[1]=new HashSet<Character>();
+                tmp[2]=new HashSet<Character>();
+            }
+            if(sb[i].charAt(j)<='C')
+                tmp[0].add(sb[i].charAt(j));
+            else if(sb[i].charAt(j)<='G')
+                tmp[1].add(sb[i].charAt(j));
+            else
+                tmp[2].add(sb[i].charAt(j));
+            dic.put(num,tmp);
+        }
+       for(Map.Entry<Integer, HashSet<Character>[]> it : dic.entrySet()){
+           if(it.getValue()[0].size()>0)
+               count++;
+           if(it.getValue()[2].size()>0)
+               count++;
+           if(it.getValue()[1].contains('E')||it.getValue()[1].contains('F')||(it.getValue()[1].contains('G')&&it.getValue()[1].contains('D')))
+               count++;
+
+        }
+        return 3*N-count;
+    }
+
+
+
+
+}
