@@ -1,0 +1,132 @@
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+//        int A[]={-1,0,1,2,3};
+//        for(int i:solution(2,A)) {
+//            System.out.println(i);
+//        }
+        int[] stores={1,5,20,11,16};
+        int[] houses={5,10,17};
+        for(int i:oa(stores,houses)){
+            System.out.println(i);
+        }
+
+
+    }
+
+    public static int[] solution(int D, int[] A) {
+        int n=A.length;
+        boolean find=true;
+        if(n<1)
+            return null;
+
+        int[] ans=new int[n];
+        int[] leaf=new int[n];
+
+        if(D<0){
+            for(int i=0;i<n;i++)
+                ans[i]=-1;
+            return ans;
+        }
+
+        for(int i=0;i<n;i++){
+            if(A[i]>=0)
+                leaf[A[i]]=1;
+        }
+
+        for(int i=0;i<n;i++){
+            if(leaf[i]==0){
+                find=true;
+                int cur=i;
+                for(int j=0;j<D;j++){
+                    cur=A[cur];
+                    if(cur==-1){
+                        find=false;
+                        break;
+                    }
+                }
+                if(find){
+                    int cur_last=i;
+                    while(cur!=-1){
+                        if(ans[cur_last]!=0)
+                            break;
+                        ans[cur_last]=cur;
+                        cur=A[cur];
+                        cur_last=A[cur_last];
+                    }
+                    while(cur!=cur_last){
+                        if(ans[cur_last]!=0)
+                            break;
+                        ans[cur_last]=cur;
+                        cur_last=A[cur_last];
+                    }
+                }
+                else{
+                    int cur_last=i;
+                    while(cur!=cur_last){
+                        if(ans[cur_last]!=0)
+                            break;
+                        ans[cur_last]=cur;
+                        cur_last=A[cur_last];
+                    }
+
+                }
+            }
+        }
+        return ans;
+
+    }
+
+
+    public static int[] oa(int[] stores, int[] houses){
+        Arrays.sort(stores);
+        if(houses.length<1)
+            return null;
+        int[] ans=new int[houses.length];
+        for(int i=0;i<houses.length;i++){
+            int lo=0,hi=houses.length-1,mid=0,flag=0;
+            if(stores[lo]>houses[i]){
+                houses[i]=stores[lo];
+                lo=hi+1;
+            }
+            else if(stores[hi]<houses[i]){
+                houses[i]=stores[hi];
+                lo=hi+1;
+            }
+            while(lo<hi){
+                mid=lo+(hi-lo)/2;
+                if(stores[mid]>houses[i]){
+                    if(mid>0&&stores[mid-1]<houses[i]){
+                        ans[i]=(houses[i]-stores[mid-1]<=stores[mid]-houses[i])?stores[mid-1]:stores[mid];
+                        flag=1;
+                        break;
+                    }
+                    else{
+                        hi=mid-1;
+                    }
+                }
+                else if(stores[mid]<houses[i]){
+                    if(mid<stores.length-1&&stores[mid+1]>houses[i]){
+                        ans[i]=(houses[i]-stores[mid]<=stores[mid+1]-houses[i])?stores[mid]:stores[mid+1];
+                        flag=1;
+                        break;
+                    }
+                    else{
+                        lo=mid+1;
+                    }
+                }
+                else{
+                    ans[i]=stores[mid];
+                    flag=1;
+                    break;
+                }
+            }
+//            if(flag==0)
+//                ans[i]=stores[hi];
+        }
+        return ans;
+    }
+}
+
