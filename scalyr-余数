@@ -1,0 +1,20 @@
+public void printInverseCicular(int num){
+        StringBuilder sb = new StringBuilder();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        System.out.print("0.");
+        int remain = 10;
+        int bit = 0;
+        while(true){
+            map.put(remain,bit++);
+            int quo = remain/num;
+            System.out.print(quo);
+            remain = remain%num;
+            remain*=10;
+            sb.append(quo);
+            if (map.containsKey(remain)){
+                int start = map.get(remain);
+                System.out.print("  "+sb.substring(start));
+                break;
+            }
+        }
+    }
