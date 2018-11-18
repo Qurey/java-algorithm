@@ -1,0 +1,105 @@
+    public static void main(String[] args) {
+//        String[] A={"b 0","b 15","b 59","b 59","b 60","b 62","b 80","b 120","b 180","b 240","e 0","e 60","e 120","e 180","e 240","e 320"};
+        String[] A={"java 0", "java 15", "java 59", "java 60", "java 120", "java 240", "python 0", "python 15", "python 45", "python 125"};
+        int Y=3;
+//        System.out.println(solution1(A,y));
+        HashMap<String,LinkedList<Integer>> map=new HashMap<String,LinkedList<Integer>>();
+        int user=0,max=0;//user:the number of user
+        for(String s:A){
+            String[] s1=s.split(" ");
+            max=(Integer.parseInt(s1[1])>max)?Integer.parseInt(s1[1]):max;
+            if(map.containsKey(s1[0])){
+                LinkedList<Integer> tmp=map.get(s1[0]);
+                tmp.offer(Integer.parseInt(s1[1]));
+                map.put(s1[0],tmp);
+            }
+            else{
+                user++;
+                LinkedList<Integer> tmp=new LinkedList<Integer>();
+                tmp.offer(Integer.parseInt(s1[1]));
+                map.put(s1[0],tmp);
+            }
+        }
+        int[] blacklist=new int[user];//0:normal  1:black first min 2:black second
+        LinkedList<LinkedList<Integer>> allowReq=new LinkedList<LinkedList<Integer>>();
+        int[] cnt=new int[user];
+        for(int i=0;i<user;i++){
+            LinkedList<Integer> tmp=new LinkedList<Integer>();
+            tmp.add(0);
+            allowReq.add(tmp);
+        }
+        for(int i=0;i<=max;i=i+60) {
+            int index=0,allow_sum=0;
+            Iterator iter = map.entrySet().iterator();
+            while (index<user&&iter.hasNext()) {
+                Map.Entry<String, LinkedList<Integer>> it = (Map.Entry) iter.next();
+                LinkedList<Integer> t = it.getValue();
+                if (blacklist[index] == 0) {
+                    int num = 0;
+                    if((!t.isEmpty() && t.peek() >= i && t.peek() < i + 60)) {
+                        while (!t.isEmpty() && t.peek() >= i && t.peek() < i + 60) {
+                            if (num < Y) {
+                                cnt[index]++;
+                                if (num == 0 && allowReq.get(index).size() < 6) {
+                                    allowReq.get(index).add(1, 0);
+
+                                } else if (num == 0) {
+                                    int sum = allowReq.get(index).get(0) - allowReq.get(index).get(5);
+                                    allowReq.get(index).set(0, sum);
+                                    allowReq.get(index).remove(5);
+                                    allowReq.get(index).add(1, 0);
+                                }
+                                allowReq.get(index).set(1, allowReq.get(index).get(1) + 1);
+                            }
+                            num++;
+                            t.poll();
+                        }
+                        allowReq.get(index).set(0, allowReq.get(index).get(0) + allowReq.get(index).get(1));
+                    }
+                    else{
+                        allowReq.get(index).add(1,0);
+                        if(allowReq.get(index).size()>6)
+                            allowReq.get(index).remove(6);
+                    }
+                } else {
+                    if (blacklist[index] == 1) {
+                        blacklist[index]++;
+
+                    } else {
+                        blacklist[index] = 0;
+                    }
+                    if (allowReq.get(index).size() < 6)
+                        allowReq.get(index).add(1, 0);
+                    else {
+                        int sum = allowReq.get(index).get(0) - allowReq.get(index).get(5);
+                        allowReq.get(index).set(0, sum);
+                        allowReq.get(index).remove(5);
+                        allowReq.get(index).add(1, 0);
+                    }
+                }
+                allow_sum+=allowReq.get(index).get(0);
+                index++;
+            }
+
+            if(allow_sum>=10) {
+                for (int j = 0; j < allowReq.size(); j++) {
+                    if (2*allowReq.get(j).get(0)>allow_sum){
+                        blacklist[j]=1;
+                        break;
+                    }
+                }
+            }
+
+        }
+        int index=0;
+        Iterator iter = map.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String, LinkedList<Integer>> it = (Map.Entry) iter.next();
+            StringBuilder sb=new StringBuilder();
+            sb.append(it.getKey());
+            sb.append(" "+cnt[index]);
+            System.out.println(sb.toString());
+            index++;
+        }
+
+    }
