@@ -1,0 +1,9 @@
+class Solution {
+    public int titleToNumber(String s) {
+        int len=s.length(),sum=0;
+        for(int i=0;i<len;i++){
+            sum+=(s.charAt(i)-'A'+1)*Math.pow(26,len-1-i);
+        }
+        return sum;
+    }
+}
