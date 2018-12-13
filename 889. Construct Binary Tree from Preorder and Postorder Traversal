@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {
+        if(pre.length==0)
+            return null;
+        else
+            return helper(pre,post,0,pre.length-1,0,post.length-1);
+    }
+    
+    public TreeNode helper(int[] pre, int[] post,int ps,int pe, int pos, int poe){
+        if(ps==pe)
+            return new TreeNode(pre[ps]);
+        else if(ps>pe)
+            return null;
+        TreeNode head=new TreeNode(pre[ps]);
+        HashSet<Integer> map=new HashSet();
+        for(int i=ps+1,j=pos;i<=pe&&j<=poe-1;i++,j++){
+            if(map.contains(pre[i])){
+               map.remove(pre[i]);
+            }
+            else{
+                map.add(pre[i]);
+            }
+            if(map.contains(post[j])){
+                map.remove(post[j]);
+            }
+            else{
+                map.add(post[j]);
+            }
+            if(map.size()==0){
+                head.left=helper(pre,post,ps+1,i,pos,j);
+                head.right=helper(pre,post,i+1,pe,j+1,poe-1);
+                return head;
+            }
+                          
+                         
+        }
+        return null;
+    }
+}
