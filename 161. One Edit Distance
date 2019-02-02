@@ -1,0 +1,54 @@
+class Solution {
+    public boolean isOneEditDistance(String s, String t) {
+        if(s.length()==t.length()){
+            int i=0;
+            for(;i<s.length();i++){
+                if(s.charAt(i)!=t.charAt(i))
+                    break;
+            }
+            for(i++;i<s.length();i++){
+                if(s.charAt(i)!=t.charAt(i))
+                    break;
+            }
+            if(i!=s.length())
+                return false;
+            else
+                return true;
+        }
+        else if(s.length()==t.length()+1){//delete
+            int i=0;
+            for(;i<t.length();i++){
+                if(s.charAt(i)!=t.charAt(i))
+                    break;
+            }
+            int j=i+1;
+            for(;i<t.length();i++,j++){
+                if(s.charAt(j)!=t.charAt(i))
+                    break;
+            }
+            if(j!=s.length())
+                return false;
+            else
+                return true;
+            
+        }
+        else if(s.length()==t.length()-1){//add
+            int i=0;
+            for(;i<s.length();i++){
+                if(s.charAt(i)!=t.charAt(i))
+                    break;
+            }
+            int j=i+1;
+            for(;i<s.length();i++,j++){
+                if(s.charAt(i)!=t.charAt(j))
+                    break;
+            }
+            if(j!=t.length())
+                return false;
+            else
+                return true;
+        }
+        else
+            return false;
+    }
+}
