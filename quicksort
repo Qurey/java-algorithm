@@ -1,0 +1,39 @@
+public class Main {
+    public static int test(int[] s,int low,int high ) {
+            int pivot=s[low];
+            while(low<high){
+                while(low<high&&s[high]>=pivot){
+                    high--;
+                }
+                int tmp=s[high];
+                s[high]=s[low];
+                s[low]=tmp;
+                while(low<high&&s[low]<=pivot){
+                    low++;
+                }
+                tmp=s[high];
+                s[high]=s[low];
+                s[low]=tmp;
+            }
+            return low;
+    }
+
+    public static void quick(int[] s,int low,int high){
+        int pivotal=test(s,low,high);
+        if(low<high){
+            quick(s,low,pivotal-1);
+            quick(s,pivotal+1,high);
+        }
+    }
+
+
+
+
+
+    public static void main(String[] args) {
+        int[] s={2,6,7,9,25,76,12,74,13,18,10};
+        quick(s,0,s.length-1);
+        for(int i:s)
+            System.out.println(i);
+    }
+}
