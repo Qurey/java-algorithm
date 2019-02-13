@@ -1,0 +1,18 @@
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        List<Integer> ans=new ArrayList<Integer>();
+        Integer[] arr1=new Integer[arr.length];
+        for(int i=0;i<arr.length;i++){
+            arr1[i]=Integer.valueOf(arr[i]);
+        }
+        Arrays.sort(arr1,new Comparator<Integer>(){
+            public int compare(Integer a,Integer b){
+                return Math.abs(a-x)-Math.abs(b-x);
+            }
+        });
+        Integer[] res=Arrays.copyOfRange(arr1,0,k);
+        Arrays.sort(res);
+        return Arrays.asList(res);
+    
+    }
+}
