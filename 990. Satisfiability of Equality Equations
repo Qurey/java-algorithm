@@ -1,0 +1,42 @@
+class Solution {
+    public int[] root;
+    public boolean equationsPossible(String[] equations) {
+        root=new int[26];
+        for(int i=0;i<26;i++){
+            root[i]=i;
+        }
+        for(String s:equations){
+            if(s.charAt(1)=='='){
+                union(s.charAt(0),s.charAt(3));
+            }
+        }
+        
+        for(String s:equations){
+            if(s.charAt(1)=='!'){
+                if(connected(s.charAt(0),s.charAt(3))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public void union(char a,char b){
+        char a1=root(a);
+        char b1=root(b);
+        root[a1-'a']=b1-'a';
+    }
+    
+    public boolean connected(char a,char b){
+        return root(a)==root(b);
+    }
+    
+    public char root(char a){
+        while(root[a-'a']!=(a-'a')){
+            a=(char)(root[a-'a']+'a');
+        }
+        return a;
+    }
+                          
+    
+}
