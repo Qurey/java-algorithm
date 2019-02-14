@@ -1,0 +1,36 @@
+public class Main {
+    public static int budgetShopping(int n, List<Integer> bundleQuantities, List<Integer> bundleCosts) {
+        int[] dp=new int[n+1];
+        dp[0]=0;
+        int min=Integer.MAX_VALUE;
+        int q=Integer.MIN_VALUE;
+//        for(int i:bundleCosts){
+//            min=Math.min(min,i);
+//        }
+//        for(int i=0;i<min;i++){
+//            dp[i]=0;
+//        }
+        for(int i=0;i<bundleCosts.size();i++) {
+            for (int v = bundleCosts.get(i); v <= n; v = v + bundleCosts.get(i)) {
+                dp[v] = Math.max(dp[v - bundleCosts.get(i)] + bundleQuantities.get(i), dp[v]);
+            }
+        }
+        for(int i=1;i<=n;i++){
+            q=Math.max(q,dp[i]);
+        }
+        return q;
+    }
+
+
+
+
+    public static void main(String[] args) {
+        List<Integer> bundleQuantities=new ArrayList();
+        List<Integer> bundleCosts=new ArrayList();
+//        bundleQuantities.add(20);
+        bundleQuantities.add(4);
+//        bundleCosts.add(24);
+        bundleCosts.add(2);
+        System.out.println(budgetShopping(2,bundleQuantities,bundleCosts));
+    }
+}
