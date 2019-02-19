@@ -1,0 +1,32 @@
+class Solution {
+    public List<List<String>> partition(String s) {
+        List <List<String>> ans=new ArrayList();
+        backtracking(s,ans,new ArrayList(),0);
+        return ans;
+    }
+    
+    public void backtracking(String s,List<List<String>> ans,List<String> tmp,int start){
+        if(start>=s.length()){
+            ans.add(new ArrayList(tmp));
+            return;
+        }
+        for(int i=start+1;i<=s.length();i++){
+            if(test(s.substring(start,i))){
+                tmp.add(s.substring(start,i));
+                backtracking(s,ans,tmp,i);
+                tmp.remove(tmp.size()-1);
+            }
+        }
+        
+    }
+    
+    public boolean test(String s){
+        if(s==null||s.length()<=1)
+            return true;
+        for(int i=0,j=s.length()-1;i<=j;i++,j--){
+            if(s.charAt(i)!=s.charAt(j))
+                return false;
+        }
+        return true;
+    }
+}
