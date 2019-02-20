@@ -1,0 +1,18 @@
+class Solution {
+    
+    public int[] prisonAfterNDays(int[] cells, int N) {
+        HashMap<String,Integer> map=new HashMap();
+        while(N>0){
+            map.put(Arrays.toString(cells),N--);
+            int[] cell=new int[cells.length];
+            for(int i=1;i<cells.length-1;i++){
+                cell[i]=cells[i-1]==cells[i+1]?1:0;
+            }
+            cells=cell;
+            if(map.containsKey(Arrays.toString(cells))){
+                N%=map.get(Arrays.toString(cells))-N;
+            }
+        }
+        return cells;
+    }
+}
