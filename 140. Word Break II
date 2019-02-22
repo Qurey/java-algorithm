@@ -1,0 +1,60 @@
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict){
+        return dfs(s,new HashMap<String,LinkedList<String>>(),wordDict);
+    }
+    
+    public LinkedList<String> dfs(String s,HashMap<String,LinkedList<String>> map,List<String> wordDict){
+        if(map.containsKey(s))
+            return map.get(s);
+        LinkedList tmp=new LinkedList();
+        if(s.length()==0){
+            tmp.add("");
+            return tmp;
+        }
+        for(String t:wordDict){
+            if(s.startsWith(t)){
+                LinkedList<String> last=dfs(s.substring(t.length()),map,wordDict);
+                for(String sub:last){
+                    tmp.add(t+(sub==""?"":" ")+sub);
+                }
+            }
+        }
+        map.put(s,tmp);
+        return tmp;
+    }
+    
+}
+
+
+
+
+// public List<String> wordBreak(String s, List<String> wordDict) {
+//         HashSet<String> set=new HashSet(wordDict);
+//         List<String> ans=new ArrayList<String>();
+//         backtracking(s,set,0,ans,new ArrayList<String>());
+//         return ans;
+//     }
+    
+//     public void backtracking(String s,HashSet<String> set,int start,List<String> ans,List<String> tmp){
+//         if(start==s.length()){
+//             StringBuilder sb=new StringBuilder();
+//             for(int j=0;j<tmp.size();j++){
+//                 if(j!=tmp.size()-1){
+//                     sb.append(tmp.get(j));
+//                     sb.append(" ");
+//                 }
+//                 else{
+//                     sb.append(tmp.get(j));
+//                 }
+//             }
+//             ans.add(sb.toString());
+//             return;
+//         }
+//         for(int i=start;i<s.length();i++){
+//             if(set.contains(s.substring(start,i+1))){
+//                 tmp.add(s.substring(start,i+1));
+//                 backtracking(s,set,i+1,ans,tmp);
+//                 tmp.remove(tmp.size()-1);
+//             }
+//         }
+//     }
