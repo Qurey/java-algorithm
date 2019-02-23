@@ -1,0 +1,19 @@
+class Solution {
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        boolean[][] visited=new boolean[image.length][image[0].length];
+        int old=image[sr][sc];
+        dfs(image,visited,sr,sc,newColor,old);
+        return image;
+    }
+    
+    public void dfs(int[][] image,boolean[][] visited,int sr,int sc,int newcolor,int old){
+        image[sr][sc]=newcolor;
+        int[][] dic=new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
+        for(int i=0;i<dic.length;i++){
+            if(sr+dic[i][0]>=0&&sr+dic[i][0]<image.length&&sc+dic[i][1]>=0&&sc+dic[i][1]<image[0].length&&image[sr+dic[i][0]][sc+dic[i][1]]==old&&!visited[sr+dic[i][0]][sc+dic[i][1]]){
+                visited[sr+dic[i][0]][sc+dic[i][1]]=true;
+                dfs(image,visited,sr+dic[i][0],sc+dic[i][1],newcolor,old);
+            }
+        }
+    }
+}
