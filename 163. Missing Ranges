@@ -1,0 +1,42 @@
+class Solution {
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        List<String> ans=new ArrayList<>();
+        if(nums.length==0){
+            if(lower==upper)
+                ans.add(String.valueOf(lower));
+            else
+                ans.add(String.valueOf(lower)+"->"+String.valueOf(upper));
+            return ans;
+        }
+        if(nums[0]>lower&&nums[0]<=upper){
+            if(nums[0]==lower+1){
+                ans.add(String.valueOf(lower));
+            }
+            else{
+                ans.add(String.valueOf(lower)+"->"+String.valueOf(nums[0]-1));
+            }
+        }
+        for(int i=0;i<nums.length-1;i++){
+            if(nums[i]>=lower&&nums[i]<upper&&nums[i+1]>nums[i]+1){
+                if(nums[i+1]==nums[i]+2){
+                    ans.add(String.valueOf(nums[i]+1));
+                }
+                else{
+                    if(nums[i+1]<=upper){
+                        ans.add(String.valueOf(nums[i]+1)+"->"+String.valueOf(nums[i+1]-1));
+                    }
+                    else{
+                        ans.add(String.valueOf(nums[i]+1)+"->"+String.valueOf(upper)); 
+                    }
+                }
+            }
+        }
+        if(nums[nums.length-1]==upper-1){
+            ans.add(String.valueOf(upper));
+        }
+        else if(nums[nums.length-1]<upper){
+            ans.add(String.valueOf(nums[nums.length-1]+1)+"->"+String.valueOf(upper));
+        }
+        return ans;
+    }
+}
