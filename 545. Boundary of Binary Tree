@@ -1,0 +1,74 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+        //        4
+        //    2
+        // 3     1
+        //     5
+
+
+class Solution {
+    public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+        List<Integer> ans=new ArrayList<>();
+        HashSet<TreeNode> set=new HashSet<>();
+        if(root==null)
+            return ans;
+        TreeNode cur=root;
+        if(root.left==null){
+            ans.add(root.val);
+            set.add(root);
+        }
+        else{
+            while(cur!=null){
+                if(!set.contains(cur)){
+                ans.add(cur.val);
+                set.add(cur);
+                }
+                cur=cur.left==null?cur.right:cur.left;
+            }
+        }
+        cur=root;
+        inorder(ans,set,cur);
+        Stack<TreeNode> s=new Stack<>();
+        cur=root;
+        if(root.right==null){
+            if(!set.contains(root)){
+            ans.add(root.val);
+            set.add(root);
+            }
+        }
+        else{
+         while(cur!=null){
+             s.push(cur);
+             cur=cur.right==null?cur.left:cur.right;
+         }
+        while(!s.isEmpty()){
+            TreeNode k=s.pop();
+            // System.out.println(k);
+            if(!set.contains(k)){
+                ans.add(k.val);
+                set.add(k);
+            }
+        }
+        }
+        return ans;
+        
+    }
+    
+    public void inorder(List<Integer> ans,HashSet<TreeNode> set,TreeNode root){
+        if(root==null)
+            return;
+        inorder(ans,set,root.left);
+        if(root.left==null&&root.right==null&&!set.contains(root)){
+            ans.add(root.val);
+            set.add(root);
+        }
+        inorder(ans,set,root.right);
+    }
+}
