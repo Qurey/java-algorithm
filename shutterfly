@@ -1,0 +1,77 @@
+static int findNumContinuousConsonants(String text, int n) {
+        List<List<Integer>> map=new ArrayList<>();
+        for(int i=0;i<text.length();i++){
+            if(!(text.charAt(i)=='a'||text.charAt(i)=='e'||text.charAt(i)=='i'||text.charAt(i)=='o'||text.charAt(i)=='u')){
+                int k=i;
+                for(;i<text.length();i++){
+                    if(!(text.charAt(i)=='a'||text.charAt(i)=='e'||text.charAt(i)=='i'||text.charAt(i)=='o'||text.charAt(i)=='u')){
+                        continue;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                i--;
+                if(!(text.charAt(i)=='a'||text.charAt(i)=='e'||text.charAt(i)=='i'||text.charAt(i)=='o'||text.charAt(i)=='u')&&i+1-k>=n){
+                    List<Integer> tmp=new ArrayList<>();
+                    tmp.add(k);
+                    tmp.add(i);
+                    map.add(tmp);
+                }
+            }
+        }
+        // for(List<Integer> s:map){
+        //     for(int i:s){
+        //     System.out.println(i);
+        //     }
+        //     System.out.println("------");
+        // }
+        int count=0;
+        for(int i=0;i<text.length();i++){
+            for(int j=i+1;j<=text.length();j++){
+                if(j-i<n){
+                    continue;
+                }
+                if(check(i,j,map,n)){
+                    count++;
+                    System.out.println(text.substring(i,j));
+                }
+            }
+        }
+        
+        return count;
+
+    }
+    //  3,5   2 3 4   3   
+     static boolean check(int s,int e,List<List<Integer>> map,int n){
+         HashSet<Integer> test=new HashSet<>();
+        //  System.out.println()
+         for(int i=0;i<map.size();i++){
+            //  if((e-map.get(i).get(0)>=n&&s<map.get(i).get(1))||(map.get(i).get(1)-s+1>=n&&e>map.get(i).get(0))&&e-map.get(i).get(0)>=n){
+            //      return true;
+            //  }
+            int count=0;
+            test=new HashSet();
+            for(int j=map.get(i).get(0);j<=map.get(i).get(1);j++){
+                test.add(j);
+            }
+            for(int j=s;j<e;j++){
+                if(test.contains(j)){
+                    count++;
+                }
+            }
+            if(s==2&&e==6){
+                  for(List<Integer> s1:map){
+            for(int i1:s1){
+            System.out.println(i1);
+            }
+            System.out.println("------");
+        }
+                System.out.println(count);
+            }
+            if(count>=n){
+                return true;
+            }
+         }
+         return false;
+     }
