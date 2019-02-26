@@ -1,0 +1,15 @@
+ public static int[] reduction(int[] nums){
+        PriorityQueue<Integer> pq=new PriorityQueue<>();
+        int sum=0;
+        for(int i:nums){
+            pq.add(i);
+        }
+        while(pq.size()>1){
+            int a=pq.poll();
+            int b=pq.poll();
+            pq.add(a+b);
+            sum+=(a+b);
+        }
+
+        return new int[]{pq.poll()};
+    }
