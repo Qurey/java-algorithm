@@ -1,0 +1,28 @@
+class Solution {
+    public int countSubstrings(String s) {
+        int count=0;
+        for(int i=0;i<s.length();i++){
+            count++;
+            for(int j=i-1,k=i+1;j>=0&&k<s.length();j--,k++){
+                if(s.charAt(j)==s.charAt(k)){
+                    count++;
+                }
+                else{
+                    break;
+                }
+            }
+            if(i+1<s.length()&&s.charAt(i)==s.charAt(i+1)){
+                count++;
+                for(int j=i-1,k=i+2;j>=0&&k<s.length();j--,k++){
+                if(s.charAt(j)==s.charAt(k)){
+                    count++;
+                }
+                else{
+                    break;
+                }
+            }
+            }
+        }
+        return count;
+    }
+}
