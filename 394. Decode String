@@ -1,0 +1,41 @@
+class Solution {
+    public String decodeString(String s) {
+        Stack<Integer> num=new Stack();
+        Stack<String> para=new Stack();
+        String res="";
+        int i=0;
+        while(i<s.length()){
+
+            if(Character.isDigit(s.charAt(i))){
+                int ans=0;
+                while(Character.isDigit(s.charAt(i))){
+                    ans=ans*10+s.charAt(i)-'0';
+                    i++;
+                }
+                num.push(ans);
+            }
+            else if(s.charAt(i)=='['){
+                para.push(res);
+                res="";
+                i++;
+            }
+            else if(s.charAt(i)==']'){
+                StringBuilder sb=new StringBuilder(para.pop());
+                int times=num.pop();
+                for(int j=0;j<times;j++){
+                    sb.append(res);
+                }
+                res=sb.toString();
+                i++;
+            }
+            else{
+                res+=s.charAt(i);
+                i++;
+            }
+            
+        }
+        return res;
+    }
+}
+
+
