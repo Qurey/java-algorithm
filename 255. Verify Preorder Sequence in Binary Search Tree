@@ -1,0 +1,14 @@
+class Solution {
+    public boolean verifyPreorder(int[] preorder) {
+        Stack<Integer> path = new Stack();
+        int low = Integer.MIN_VALUE;
+        for(int i:preorder){
+            if(i<low)
+                return false;
+            while(!path.isEmpty()&&i>path.peek())
+                low = path.pop();
+            path.push(i);
+        }
+        return true;
+    }
+}
