@@ -1,0 +1,41 @@
+class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        List<List<Integer>> adject=new ArrayList(n);
+        boolean[] visited=new boolean[n];
+        for(int i=0;i<n;i++){
+            adject.add(i,new ArrayList<Integer>());
+        }
+        
+        for(int i=0;i<edges.length;i++){
+            int m=edges[i][0];
+            int n1=edges[i][1];
+            adject.get(m).add(n1);
+            adject.get(n1).add(m);
+        }
+        
+        if (isCyclic(adject,visited,0,-1))
+            return false;
+        
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) 
+                return false;
+        }
+        return true;
+        
+        
+    }
+    
+    public boolean isCyclic(List<List<Integer>> adject,boolean[] visited,int start,int parent){
+        visited[start]=true;
+        
+        for(int i=0;i<adject.get(start).size();i++){
+            int v=adject.get(start).get(i);
+            if ((visited[v] && parent != v) || (!visited[v] && isCyclic(adject,                  visited, v,start)))
+                return true;
+        }
+        return false;
+    }
+    
+}
+
+
