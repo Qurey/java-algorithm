@@ -1,0 +1,79 @@
+class Solution {
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        List<Integer> ans=new ArrayList();
+        UF uf=new UF(positions.length);
+        HashMap<Integer,Integer> map=new HashMap();
+        int num=0;
+        for(int i=0;i<positions.length;i++){
+            int p=positions[i][0];
+            int q=positions[i][1];
+            if(map.containsKey(p*n+q)){
+                ans.add(num-positions.length+uf.seg);
+                continue;
+            }
+            map.put(p*n+q,i);
+            num++;
+            if(p-1>=0&&map.containsKey((p-1)*n+q)){
+                uf.union(i,map.get((p-1)*n+q));
+            }
+            if(p+1<m&&map.containsKey((p+1)*n+q)){
+                uf.union(i,map.get((p+1)*n+q));
+            }
+            if(q+1<n&&map.containsKey(p*n+q+1)){
+                uf.union(i,map.get(p*n+q+1));
+            }
+            if(q-1>=0&&map.containsKey(p*n+q-1)){
+                uf.union(i,map.get(p*n+q-1));
+            }
+            ans.add(num-positions.length+uf.seg);
+        }
+        return ans;
+    }
+}
+
+class UF{
+    int[] id;
+    int[] sz;
+    int N;
+    int seg;
+    
+    public UF(int n){
+        N=n;
+        id=new int[n];
+        sz=new int[n];
+        seg=n;
+        for(int i=0;i<n;i++){
+            id[i]=i;
+            sz[i]=1;
+        }
+    }
+    
+    public int root(int i){
+        while(i!=id[i]){
+            id[i]=id[id[i]];
+            i=id[i];
+        }
+        return i;
+    }
+    
+    public boolean connected(int p,int q){
+        return root(p)==root(q);
+    }
+    
+    public void union(int p,int q){
+        int i=root(p);
+        int j=root(q);
+        if(i==j)
+            return;
+        if(sz[i]<sz[j]){
+            id[i]=j;
+            sz[j]+=sz[i];
+        }
+        else{
+            id[j]=i;
+            sz[i]+=sz[j];
+        }
+        seg--;
+    }
+    
+}
