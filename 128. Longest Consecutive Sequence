@@ -1,0 +1,67 @@
+class UF{
+    int[] id;
+    int[] sz;
+    int N;
+    
+    public UF(int n){
+        N=n;
+        id=new int[n];
+        sz=new int[n];
+        for(int i=0;i<n;i++){
+            id[i]=i;
+            sz[i]=1;
+        }
+    }
+    
+    public int root(int i){
+        while(i!=id[i]){
+            id[i]=id[id[i]];
+            i=id[i];
+        }
+        return i;
+    }
+    
+    public boolean connected(int p,int q){
+        return root(p)==root(q);
+    }
+    
+    public void union(int p,int q){
+        int i=root(p);
+        int j=root(q);
+        if(sz[i]<sz[j]){
+            id[i]=j;
+            sz[j]+=sz[i];
+        }
+        else{
+            id[j]=i;
+            sz[i]+=sz[j];
+        }
+    }
+    
+    public int maxsz(){
+        int max=0;
+        for(int i:sz){
+            max=i>max?i:max;
+        }
+        return max;
+    }
+}
+
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        HashMap<Integer,Integer> set=new HashMap();
+        UF uf=new UF(nums.length);
+        for(int i=0;i<nums.length;i++){
+            if(set.containsKey(nums[i]))
+                continue;
+            set.put(nums[i],i);
+            if(set.containsKey(nums[i]-1))
+                uf.union(i,set.get(nums[i]-1));
+            if(set.containsKey(nums[i]+1))
+                uf.union(i,set.get(nums[i]+1));
+        }
+        
+        return uf.maxsz();
+    }
+}
+
