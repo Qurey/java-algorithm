@@ -1,0 +1,23 @@
+class Solution {
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        List<List<Integer>> ans=new ArrayList<>();
+        List<Integer> tmp=new ArrayList<Integer>();
+        tmp.add(0);
+        backtracking(tmp,ans,0,graph);
+        return ans;
+    }
+    
+    public void backtracking(List<Integer> tmp,List<List<Integer>> ans,int start,int[][] graph){
+        if(tmp.size()>0&&tmp.get(tmp.size()-1)==graph.length-1){
+            ans.add(new ArrayList<Integer>(tmp));
+            return;
+        }
+        for(int j:graph[start]){
+            tmp.add(j);
+            backtracking(tmp,ans,j,graph);
+            tmp.remove(tmp.size()-1);
+        }
+    }
+        
+    
+}
