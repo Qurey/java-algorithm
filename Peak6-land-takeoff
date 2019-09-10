@@ -1,0 +1,58 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+
+class Result {
+
+    /*
+     * Complete the 'getMinGates' function below.
+     *
+     * The function is expected to return an INTEGER.
+     * The function accepts following parameters:
+     *  1. INTEGER_ARRAY landingTimes
+     *  2. INTEGER_ARRAY takeOffTimes
+     *  3. INTEGER maxWaitTime
+     *  4. INTEGER initialPlanes
+     */
+
+    public static int getMinGates(List<Integer> landingTimes, List<Integer> takeOffTimes, int maxWaitTime, int initialPlanes) {
+        int count=initialPlanes, end=0;
+        for(int i=0;i<landingTimes.size();i++){
+            int cur=landingTimes.get(i);
+            int num=cur%100;
+            if(num+maxWaitTime<60){
+                cur+=maxWaitTime;
+            }
+            else{
+                int day=cur/100;
+                day+=(maxWaitTime-(60-num))/60+1;
+                cur=day*100+(maxWaitTime-(60-num))%60;
+            }
+            if(end<takeOffTimes.size()&&cur<takeOffTimes.get(end)){
+                count++;
+            }
+            else if(end>=takeOffTimes.size()){
+                count++;
+            }
+            else{
+                end++;
+            }
+
+        }
+        return count;
+
+    }
+
+}
+
+public class Solution {
