@@ -1,0 +1,88 @@
+import java.awt.*;
+import java.util.Arrays;
+
+public class Asana {
+
+    /**
+     *
+     * @param garden the matrix of garden
+     * @return the number of carrots the rabbit eats
+     */
+    public static int eatCarrot(int[][] garden) {
+        //current location of rabbit
+        Point current = findCenter(garden);
+        int carrots = garden[current.x][current.y];
+        garden[current.x][current.y] = -garden[current.x][current.y];
+        //the direction of move
+        int[][] dir = new int[][]{{0,-1},{0,1},{1,0},{-1,0}};
+        //whether stop
+        boolean stop = false;
+        while (!stop) {
+            stop = true;
+            int maxCarrots = 0;
+            Point maxLocation = new Point(0, 0);
+            for (int i = 0; i < dir.length; i++) {
+                //Check if there's non-zero neighbors and find the neighbor that has the most carrots
+                //set the stop flag, update maxCarrots and maxLocation
+                if (current.x + dir[i][0] >= 0
+                        && current.x + dir[i][0] < garden.length
+                        && current.y + dir[i][1] >= 0
+                        && current.y + dir[i][1] < garden[0].length
+                        && garden[current.x + dir[i][0]][current.y + dir[i][1]] > maxCarrots) {
+                    stop = false;
+                    maxLocation = new Point(current.x + dir[i][0], current.y + dir[i][1]);
+                    maxCarrots = garden[current.x + dir[i][0]][current.y + dir[i][1]];
+                    garden[current.x + dir[i][0]][current.y + dir[i][1]] = -garden[current.x + dir[i][0]][current.y + dir[i][1]];
+                }
+            }
+            current = maxLocation;
+            carrots += maxCarrots;
+        }
+        return carrots;
+    }
+
+    /**
+     * find the center of  the garden
+     * @param garden garden
+     * @return the center of  the garden
+     */
+    public static Point findCenter(final int[][] garden) {
+        int row = garden.length, col = garden[0].length;
+        if ((row % 2 != 0) && (col % 2 != 0)) {
+            return new Point(row / 2, col / 2 );
+        }
+        else if ((row % 2 == 0) && (col % 2 == 0)) {
+            Point[] tmp = new Point[]{
+                    new Point(row / 2, col / 2),
+                    new Point(row / 2 - 1, col / 2),
+                    new Point(row / 2, col / 2 - 1),
+                    new Point(row / 2 - 1, col / 2 - 1)
+            };
+            //choose the square that has the most carrots.
+            Arrays.sort(tmp, (a, b) -> (garden[b.x][b.y] - garden[a.x][a.y]));
+            return tmp[0];
+        }
+        else if ((row % 2 == 0) && (col % 2 != 0)) {
+            Point[] tmp = new Point[]{
+                    new Point(row / 2, col / 2),
+                    new Point(row / 2 - 1, col / 2)
+            };
+            Arrays.sort(tmp, (a, b) -> (garden[b.x][b.y] - garden[a.x][a.y]));
+            return tmp[0];
+        }
+        else {
+            Point[] tmp = new Point[]{
+                    new Point(row / 2, col / 2),
+                    new Point(row / 2, col / 2 - 1)
+            };
+            Arrays.sort(tmp, (a, b) -> (garden[b.x][b.y] - garden[a.x][a.y]));
+            return tmp[0];
+        }
+    }
+
+
+    public static void main(String args[]){
+        int[][] garden = new int[][]{{5, 7, 8, 6, 3}, {0, 0, 7, 0, 4}, {4, 6, 3, 4, 9}, {3, 1, 0, 5, 8}};
+        System.out.println(eatCarrot(garden));
+    }
+}
