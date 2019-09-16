@@ -1,0 +1,18 @@
+class Solution {
+    public int minHeightShelves(int[][] books, int shelf_width) {
+        int[] dp = new int[books.length];
+        dp[0] = books[0][1];
+        for (int i = 1; i < books.length; i++) {
+            int width = books[i][0];
+            int height = books[i][1];
+            dp[i] = height + dp[i-1];
+            for (int j = i - 1; j >= 0 && width + books[j][0] <= shelf_width; j--) {
+                width += books[j][0];
+                height = Math.max(height, books[j][1]);
+                dp[i] = Math.min(dp[i], j-1<0?0+height:dp[j-1]+height);
+            }
+           
+        }
+        return dp[books.length-1];
+    }
+}
