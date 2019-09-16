@@ -1,0 +1,15 @@
+class Solution {
+    public String removeDuplicates(String S) {
+        int len = S.length();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            if (sb.length() > 0 && sb.charAt(sb.length() - 1) == S.charAt(i)) {
+                sb.deleteCharAt(sb.length() - 1);
+            }
+            else {
+                sb.append(S.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+}
