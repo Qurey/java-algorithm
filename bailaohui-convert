@@ -1,0 +1,36 @@
+public class Solution {
+    public static void main(String args[] ) throws Exception {
+        System.out.println(convert("0", 16, 10));
+    }
+    
+    public static String convert(String s, int src, int dst) {
+        StringBuilder sb = new StringBuilder();
+        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<Integer, String> dstMap = new HashMap<>();
+        for (int i = 0; i < src && i<=9; i++) {
+            map.put(String.valueOf(i), i);
+            dstMap.put(i, String.valueOf(i));
+        }
+        if (src > 10) {
+            for (int i = 10; i < src; i++) {
+                map.put(String.valueOf((char)('A' + i - 10)), i);
+            }
+        }
+        if (dst > 10) {
+            for (int i = 10; i < dst; i++) {
+                dstMap.put(i, String.valueOf((char)('A' + i - 10)));
+            }
+        }
+        int sum = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            int num = s.length() - 1 - i;
+            sum += map.get(s.substring(i, i+1)) * Math.pow(src, num);
+        }
+        while (sum > 0) {
+            sb.append(dstMap.get(sum % dst));
+            sum /= dst;
+        }
+        return sb.reverse().toString();
+    }
+
+}
