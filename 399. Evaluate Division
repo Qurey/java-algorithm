@@ -1,0 +1,83 @@
+class Solution {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        int index = 0;
+        double[] ans = new double[queries.size()];
+        HashMap<String, Integer> map = new HashMap<>();
+        for (List<String> tmp : equations) {
+            for(String s : tmp){
+                if(!map.containsKey(s)) {
+                    map.put(s, index++);
+                }
+            }   
+        }
+        UF uf = new UF(index);
+        for(int i=0;i<equations.size();i++){
+            uf.union(map.get(equations.get(i).get(0)), map.get(equations.get(i).get(1)), values[i]);
+        }
+        int k=index;
+        index = 0;
+        for (List<String> q : queries) {
+            if(!map.containsKey(q.get(0))||!map.containsKey(q.get(1))){
+                ans[index] = -1.0;
+            }
+            else if(!uf.connected(map.get(q.get(0)), map.get(q.get(1)))){
+                ans[index] = -1.0;
+            }
+            else{
+                ans[index] = uf.getDis(map.get(q.get(0))) / uf.getDis(map.get(q.get(1)));
+            }
+            index++;
+        }
+        return ans;        
+    }
+}
+
+class UF{
+    int[] num;
+    int[] sz;
+    double[] distance;
+    int size;
+    
+    public UF(int n) {
+        size = n;
+        num = new int[n];
+        sz = new int[n];
+        distance = new double[n];
+        Arrays.fill(distance,1.0);
+        Arrays.fill(sz,1);
+        for(int i=0;i<n;i++){
+            num[i]=i;
+        }
+    }
+    
+    public double getDis(int a){
+        return distance[a];
+    }
+    public int root(int a){
+        while(a!=num[a]){
+            distance[a]*=distance[num[a]];
+            num[a]=num[num[a]];
+            a=num[a];
+        }
+        return a;
+    }
+    public boolean connected(int p,int q) {
+        return root(p) == root(q);
+    }
+    
+    public void union(int p, int q, double weight) {
+        int i=root(p);
+        int j=root(q);
+        if(sz[i] < sz[j]) {
+            num[i]=j;
+            distance[i]=weight*distance[q];
+            sz[j]+=sz[i];
+        }
+        else{
+            num[j]=i;
+            distance[j]=1/weight*distance[p];
+            sz[i]+=sz[j];
+        }
+    }
+    
+}
