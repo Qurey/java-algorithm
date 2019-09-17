@@ -1,0 +1,59 @@
+// class Solution {
+//     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+//         HashMap<Integer, HashMap<Integer, Integer>> map = new HashMap<>();
+//         for (int[] f : flights) {
+//             if (!map.containsKey(f[0])) {
+//                 map.put(f[0], new HashMap<>());
+//             }
+//             map.get(f[0]).put(f[1], f[2]);
+//         }
+//         Queue<int[]> pq = new PriorityQueue<>((a, b) -> (Integer.compare(a[0], b[0])));
+//         pq.add(new int[] {0, src, K});
+//         while(pq.size()>0){
+//             int[] tmp = pq.poll();
+//             int price = tmp[0];
+//             int city = tmp[1];
+//             int stop = tmp[2];
+//             if(city==dst){
+//                 return price;
+//             }
+//             if(stop>=0){
+//                 HashMap<Integer, Integer> dic = map.getOrDefault(city, new HashMap<>());
+//                 for(Map.Entry<Integer, Integer> entry:dic.entrySet()){
+//                     pq.add(new int[]{price+entry.getValue(), entry.getKey(), stop-1});
+//                 }
+//             }
+            
+//         }
+//         return -1;
+//     }
+// }
+
+
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        int[] cost = new int[n];
+        Arrays.fill(cost, Integer.MAX_VALUE);
+        cost[src]=0;
+        for(int i=0;i<=K;i++){
+            update(flights, cost);
+        }
+        return cost[dst] == Integer.MAX_VALUE ? -1 : cost[dst];
+    }
+    
+    public void update(int[][] flights, int[] price){
+        int[] ori = Arrays.copyOf(price, price.length);
+        for(int i=0;i<flights.length;i++){
+            int start = flights[i][0];
+            int end = flights[i][1];
+            int priceNow = flights[i][2];
+            if(ori[start]==Integer.MAX_VALUE){
+                continue;
+            }
+            if(ori[start]+priceNow<price[end]){
+                price[end]=ori[start]+priceNow;
+            }
+        }
+    }
+}
+    
