@@ -1,0 +1,24 @@
+class Solution {
+    public List<Integer> killProcess(List<Integer> pid, List<Integer> ppid, int kill) {
+        HashMap<Integer, Set<Integer>> map = new HashMap<>();
+        for (int i = 0; i < ppid.size(); i++) {
+            if (!map.containsKey(ppid.get(i))) {
+                map.put(ppid.get(i), new HashSet<>());
+            }
+            map.get(ppid.get(i)).add(pid.get(i));
+        }
+        List<Integer> ans = new ArrayList<>();
+        Queue<Integer> q = new LinkedList<>();
+        q.add(kill);
+        while (!q.isEmpty()) {
+            int tmp = q.poll();
+            ans.add(tmp);
+            if(map.containsKey(tmp)){
+                for (int i : map.get(tmp)) {
+                    q.add(i);
+                }
+            }
+        }
+        return ans;
+    }
+}
