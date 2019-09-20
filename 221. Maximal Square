@@ -1,0 +1,27 @@
+class Solution {
+    public int maximalSquare(char[][] m) {
+        if (m == null || m.length == 0 || m[0].length == 0) {
+            return 0;
+        }
+        int len = 0;
+        int[][] dp = new int[m.length][m[0].length];
+        for (int i = 0; i < m.length; i++) {
+            dp[i][0] = m[i][0] == '1' ? 1 : 0;
+            len = Math.max(dp[i][0], len);
+        }
+        for (int i = 0; i < m[0].length; i++) {
+            dp[0][i] = m[0][i] == '1' ? 1 : 0;
+            len = Math.max(dp[0][i], len);
+        }
+        for (int i = 1; i < m.length; i++) {
+            for (int j = 1; j < m[0].length; j++) {
+                if (m[i][j] == '1') {
+                    dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i - 1][j - 1]), dp[i][j - 1]) + 1;
+                    len = Math.max(dp[i][j], len);
+                }
+            }
+        }
+        
+        return len * len;
+    }
+}
