@@ -1,0 +1,120 @@
+import java.util.*;
+
+class Status {
+    int amount;
+    String status;
+
+    public Status(int amount, String status) {
+        this.amount = amount;
+        this.status = status;
+    }
+}
+public class Stripe {
+
+
+    public static int compute(List<String> invoices) {
+        HashMap<Integer, Status> map = new HashMap<Integer, Status>();
+        for (String invoice : invoices) {
+            String[] splitStatus = invoice.split(":");
+            if (splitStatus[0].equals("CREATE")) {
+                String[] createInfo = splitStatus[1].trim().split("&");
+                String[] idInfo = createInfo[0].split("=");
+                String[] amountInfo = createInfo[1].split("=");
+                String[] currencyInfo = createInfo[2].split("=");
+                if (createInfo[0].split("=")[0].equals("id")
+                        && createInfo[1].split("=")[0].equals("amount")
+                        && createInfo[2].split("=")[0].equals("currency")) {
+                    if (createInfo[2].split("=")[1].equals("USD") && !map.containsKey(Integer.parseInt(idInfo[1]))) {
+                        map.put(Integer.parseInt(idInfo[1]), new Status(Integer.parseInt(amountInfo[1]), "CREATE"));
+                    }
+                }
+
+            }
+            else if (splitStatus[0].equals("FINALIZE")) {
+                String[] finalizeInfo = splitStatus[1].trim().split("&");
+                String[] idInfo = finalizeInfo[0].split("=");
+                String[] amountInfo = finalizeInfo[1].split("=");
+                String[] currencyInfo = finalizeInfo[2].split("=");
+                if (idInfo[0].equals("id") && amountInfo[0].equals("amount") && currencyInfo[0].equals("currency")
+                        && map.containsKey(Integer.parseInt(idInfo[1]))
+                        && map.get(Integer.parseInt(idInfo[1])).status.equals("CREATE")
+                        && currencyInfo[1].equals("USD")) {
+                    map.put(Integer.parseInt(idInfo[1]), new Status(Integer.parseInt(amountInfo[1]), "FINALIZE"));
+                }
+            }
+            else if (splitStatus[0].equals("PAY")) {
+                String[] payInfo = splitStatus[1].trim().split("&");
+                String[] idInfo = payInfo[0].split("=");
+                if (idInfo[0].equals("id") && map.containsKey(Integer.parseInt(idInfo[1]))
+                        && map.get(Integer.parseInt(idInfo[1])).status.equals("FINALIZE")) {
+                    map.put(Integer.parseInt(idInfo[1]), new Status(0, "PAY"));
+                }
+            }
+        }
+
+        int sum = 0;
+        for (Map.Entry<Integer, Status> entry : map.entrySet()) {
+            sum += entry.getValue().amount;
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        List<String> test1 = new ArrayList<>(Arrays.asList(
+                "CREATE: id=13&amount=800&currency=USD"
+        ));
+        System.out.println(compute(test1)); //800
+
+        List<String> test2 = new ArrayList<>(Arrays.asList(
+                "CREATE: id=16&amount=800&currency=USD",
+                "FINALIZE: id=16&amount=600&currency=USD"
+        ));
+        System.out.println(compute(test2)); //600
+
+        List<String> test3 = new ArrayList<>(Arrays.asList(
+                "CREATE: id=16&amount=800&currency=USD",
+                "FINALIZE: id=16&amount=600&currency=USD",
+                "CREATE: id=13&amount=800&currency=USD"
+        ));
+        System.out.println(compute(test3)); //1400
+        List<String> test4 = new ArrayList<>(Arrays.asList(
+                "CREATE: id=16&amount=800&currency=USD",
+                "FINALIZE: id=16&amount=600&currency=USD",
+                "PAY: id=16"
+        ));
+        System.out.println(compute(test4)); //0
+
+//         Test9:
+
+        List<String> test5 = new ArrayList<>(Arrays.asList(
+                "CREATE: amount=800&id=16&currency=USD",
+                "FINALIZE: id=16&amount=600&currency=USD&otherfield=a",
+                "PAY: otherfield=a&id=16"
+        ));
+        System.out.println(compute(test5)); //0
+
+        // Not USD
+        List<String> test6 = new ArrayList<>(Arrays.asList(
+                "CREATE: amount=800&id=16&currency=USD",
+                "FINALIZE: id=16&amount=600&currency=US"
+        ));
+        System.out.println(compute(test6)); // 800
+        test6.add("PAY: id=16");
+        System.out.println(compute(test6)); // 800
+
+        //如果action 不在 create/finalize/pay里面，忽略
+        List<String> test7 = new ArrayList<>(Arrays.asList(
+                "Random action"
+        ));
+        System.out.println(compute(test7)); // 0
+
+        //test 10: create 2 invoice with same id
+        List<String> test8 = new ArrayList<>(Arrays.asList(
+                "CREATE: id=16&amount=800&currency=USD",
+                "FINALIZE: id=16&amount=600&currency=USD",
+                "PAY: id=16",
+                "CREATE: id=16&amount=800&currency=USD"
+        ));
+        System.out.println(compute(test8)); // 0
+    }
+}
