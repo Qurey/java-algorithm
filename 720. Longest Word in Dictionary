@@ -1,0 +1,85 @@
+class Solution {
+    public String longestWord(String[] words) {
+        if(words==null||words.length==0){
+            return "";
+        }
+        Arrays.sort(words);
+        Trie trie=new Trie();
+        int max=0;
+        String res="";
+        for(String s:words){
+            int len=trie.insert(s);
+            if(len>max){
+                max=len;
+                res=s;
+            }
+        }
+        return res;
+    }
+}
+
+class Trie{
+    class Node {
+        char val;
+        Node[] next;
+        boolean isWord;
+        public Node(){
+            next = new Node[26];
+            isWord = false;
+        }
+        public Node (char val) {
+            this.val = val;
+            next = new Node[26];
+            isWord = false;
+        }
+    }
+    
+    Node root;
+    
+    public Trie() {
+        root = new Node();
+    }
+    
+    public int insert(String word) {
+        Node tmp = root;
+        int len = word.length();
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (tmp.next[c-'a']!=null){
+                tmp=tmp.next[c-'a'];
+                if(i!=word.length() - 1&&!tmp.isWord){
+                    len=0;
+                }
+            }
+            else {
+                if(i!=word.length() - 1){
+                    len = 0;
+                }
+                tmp.next[c-'a'] = new Node(c);
+                tmp = tmp.next[c-'a'];
+                if (i == word.length() - 1) {
+                    tmp.isWord = true;
+                }
+            }
+        }
+        return len;
+    }
+    
+    public boolean find(String word) {
+        Node tmp = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (tmp.next[c-'a']==null){
+                return false;
+            }
+            else{
+                if(i==word.length()-1){
+                    return tmp.next[c-'a'].isWord;
+                }
+                tmp=tmp.next[c-'a'];
+            }
+        }
+        return true;
+        
+    }
+}
