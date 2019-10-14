@@ -1,0 +1,42 @@
+class Solution {
+    public int[] smallestRange(List<List<Integer>> nums) {
+        int ptr[] = new int[nums.size()];
+        int minVal, maxVal, minIndex, flag, minRange, minRes = 0, maxRes = 0;
+        minRange = Integer.MAX_VALUE;
+        while (true) {
+            minIndex = -1; 
+            minVal = Integer.MAX_VALUE; 
+            maxVal = Integer.MIN_VALUE; 
+            flag = 0; 
+            for (int i = 0; i < nums.size(); i++) {
+                if (ptr[i] == nums.get(i).size()) {
+                    flag = 1;
+                    break;
+                }
+                
+                if (ptr[i] < nums.get(i).size() && nums.get(i).get(ptr[i]) < minVal) {
+                    minVal = nums.get(i).get(ptr[i]);
+                    minIndex = i;
+                }
+                
+                if (ptr[i] < nums.get(i).size() && nums.get(i).get(ptr[i]) > maxVal) {
+                    maxVal = nums.get(i).get(ptr[i]);
+                }
+            }
+            
+            if (flag == 1) {
+                break;
+            }
+            
+            ptr[minIndex]++;
+            
+            if (maxVal - minVal < minRange) {
+                minRes = minVal;
+                maxRes = maxVal;
+                minRange = maxVal - minVal;
+            }
+        }
+        
+        return new int[]{minRes, maxRes};
+    }
+}
