@@ -1,0 +1,85 @@
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> res = new ArrayList<>();
+        HashSet<String> dic = new HashSet<>(wordList);
+        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, List<String>> child = new HashMap<>();
+        if (!dic.contains(endWord)) {
+            return res;
+        }
+        map.put(beginWord, 0);
+        Queue<String> q = new LinkedList<>();
+        q.add(beginWord);
+        boolean findEnd = false;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                String cur = q.poll();
+                if (!child.containsKey(cur)) {
+                    child.put(cur, new ArrayList<>());
+                }
+                HashSet<String> neighbor = getNeighbors(cur, dic);
+                for (String s : neighbor) {
+                    child.get(cur).add(s);
+                    if (!map.containsKey(s)) {
+                        map.put(s, map.get(cur) + 1);
+                        if (s.equals(endWord)) {
+                            findEnd = true;
+                        }
+                        else {
+                            q.add(s);
+                        }
+                    }
+                }
+                if (findEnd) {
+                    break;
+                }
+            }
+        }
+        List<String> tmp = new ArrayList<>();
+        tmp.add(beginWord);
+        dfs(beginWord, endWord, map, child, res, tmp);
+        
+        return res;
+        
+    }
+    
+    public HashSet<String> getNeighbors(String beginWord, HashSet<String> lists) {
+        HashSet<String> set = new HashSet<>();
+        char[] word = beginWord.toCharArray();
+        for (int i = 0; i < word.length; i++) {
+            for (char j = 'a'; j <= 'z'; j++) {
+                if (j != word[i]) {
+                    char old = word[i];
+                    word[i] = j;
+                    if (lists.contains(String.valueOf(word))) {
+                        set.add(String.valueOf(word));
+                    }
+                    word[i] = old;
+                }
+            }
+        }
+        return set;
+        
+    }
+    
+    public void dfs(String beginWord, String endWord, HashMap<String, Integer> map, HashMap<String, List<String>> child, List<List<String>> res, List<String> tmp) {
+        if (beginWord.equals(endWord)) {
+            res.add(new ArrayList<>(tmp));
+            return;
+        }
+        if (!child.containsKey(beginWord)) {
+            return;
+        }
+        for (String s : child.get(beginWord)) {
+            if (map.get(s) == map.get(beginWord) + 1) {
+                tmp.add(s);
+                dfs(s, endWord, map, child, res, tmp);
+                tmp.remove(tmp.size()-1);
+            }
+        }
+        
+        
+    }
+    
+}
