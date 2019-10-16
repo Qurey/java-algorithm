@@ -1,0 +1,81 @@
+class Solution {
+    public String countOfAtoms(String formula) {
+        TreeMap<String, Integer> tmp = helper(formula);
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Integer> entry : tmp.entrySet()) {
+            sb.append(entry.getKey());
+            if (entry.getValue() > 1) {
+                sb.append(entry.getValue());
+            }
+        }
+        return sb.toString();
+    }
+    
+    public TreeMap<String, Integer> helper(String formula) {
+        TreeMap<String, Integer> map = new TreeMap<>();
+        if (formula == null || formula.length() == 0) {
+            return map;
+        }
+        for (int i = 0; i < formula.length(); i++) {
+            char c = formula.charAt(i);
+            if (c >= 'A' && c <= 'Z') {
+                String s = String.valueOf(c); 
+                i++;
+                while(i < formula.length() && formula.charAt(i) >= 'a' && formula.charAt(i) <='z') {
+                    s += formula.charAt(i);
+                    i++;
+                }
+                if (i < formula.length() && Character.isDigit(formula.charAt(i))) {
+                    String num = "";
+                    while (i < formula.length() && Character.isDigit(formula.charAt(i))) {
+                        num += formula.charAt(i);
+                        i++;
+                    }
+                    map.put(s, map.getOrDefault(s, 0) + Integer.parseInt(num));
+                }
+                else {
+                    map.put(s, map.getOrDefault(s, 0) + 1);
+                }
+                i--;
+            }
+            
+            else if (c == '(') {
+                int index = i+1, base = 1, count = 1;
+                while(index < formula.length() && count > 0) {
+                    if (formula.charAt(index) == '(') {
+                        count++;
+                    }
+                    else if (formula.charAt(index) == ')') {
+                        count--;
+                    }
+                    index++;
+                }
+                index--;
+                int end = index;
+                
+                if ((index == formula.length() - 1) || !Character.isDigit(formula.charAt(index+1))) {
+                    base = 1;
+                }
+                else {
+                    index++;
+                    String num = "";
+                    while (index < formula.length() && Character.isDigit(formula.charAt(index))) {
+                        num += formula.charAt(index);
+                        index++;
+                    }
+                    base = Integer.parseInt(num);
+                    index--;
+                }
+                
+                TreeMap<String, Integer> tmp = helper(formula.substring(i+1, end));
+                for (Map.Entry<String, Integer> entry : tmp.entrySet()) {
+                    map.put(entry.getKey(), map.getOrDefault(entry.getKey(), 0) + entry.getValue() * base);
+                }
+                i = index;             
+            }
+            
+        }
+        
+        return map;
+    }
+}
