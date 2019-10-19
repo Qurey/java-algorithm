@@ -1,0 +1,71 @@
+public class findDuplicate {
+
+    //一个sorted数组，有重复元素。问数组中是否有重复超过数组长度1/4的元素
+    public static boolean find (int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return false;
+        }
+        int[] index = new int[]{0, nums.length/4, nums.length/2, 3*nums.length/4};
+        for (int i = 0; i < 4; i++) {
+            if (calLen(nums, nums[index[i]]) > nums.length/4) {
+                System.out.println(nums[index[i]] + "    " + calLen(nums, nums[index[i]]));
+                System.out.println("-------------");
+                return true;
+            }
+        }
+        return false;
+
+
+    }
+
+    public static int calLen(int[] nums, int target) {
+        int lo = 0, hi = nums.length - 1, mi;
+        int start = 0, end = 0;
+        while (lo <= hi) {
+            mi = lo + (hi - lo) / 2;
+            if (nums[mi] < target) {
+                lo = mi + 1;
+            }
+            else if (nums[mi] > target) {
+                hi = mi - 1;
+            }
+            else {
+                if (mi >=1 && nums[mi - 1] == nums[mi]) {
+                    hi = mi - 1;
+                }
+                else {
+                    start = mi;
+                    break;
+                }
+            }
+        }
+
+        lo = 0;
+        hi = nums.length - 1;
+        while (lo <= hi) {
+            mi = lo + (hi - lo) / 2;
+            if (nums[mi] < target) {
+                lo = mi + 1;
+            }
+            else if (nums[mi] > target) {
+                hi = mi - 1;
+            }
+            else {
+                if (mi < nums.length - 1 && nums[mi + 1] == nums[mi]) {
+                    lo = mi + 1;
+                }
+                else {
+                    end = mi;
+                    break;
+                }
+            }
+        }
+        return end - start + 1;
+    }
+
+    public static void main(String[] args) {
+        find(new int[]{0,1,1,2});
+        find(new int[]{0});
+        find(new int[]{0,1,2,3,4,6,6,6});
+    }
+}
