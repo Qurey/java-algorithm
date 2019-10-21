@@ -1,0 +1,78 @@
+class Solution {
+    public String nearestPalindromic(String n) {
+        Long num = Long.parseLong(n);
+        Long higher = findHigher(num+1);
+        Long lower = findLower(num-1);
+        return Math.abs(num-lower) <= Math.abs(higher-num) ? String.valueOf(lower) : String.valueOf(higher);
+    }
+    
+    public Long findHigher(Long limit) {
+        String low = String.valueOf(limit);
+        char[] s = low.toCharArray();
+        int len = s.length;
+        char[] t = Arrays.copyOf(s, len);
+        for (int i = 0; i < len; i++) {
+            t[len-1-i] = t[i];
+        }
+        
+        for (int i = 0; i < len; i++) {
+            if (s[i] < t[i]) {
+                return Long.parseLong(String.valueOf(t));
+            }
+            else if (s[i] > t[i]) {
+                for (int j = (len - 1) / 2; j >= 0; j--) {
+                    if (t[j] == '9') {
+                        t[j] = '0';
+                    }
+                    else {
+                        t[j]++;
+                        break;
+                    }
+                }
+                
+                for (int k = 0; k < len; k++) {
+                    t[len-1-k] = t[k];
+                }
+                return Long.parseLong(String.valueOf(t));      
+            }
+        }   
+        return Long.parseLong(String.valueOf(t));
+    }
+    
+    public Long findLower(Long limit) {
+        String high = String.valueOf(limit);
+        char[] s = high.toCharArray();
+        int len = s.length;
+        char[] t = Arrays.copyOf(s, len);
+        for (int i = 0; i < len; i++) {
+            t[len-1-i] = t[i];
+        }
+        
+        for (int i = 0; i < len; i++) {
+            if (s[i] > t[i]) {
+                return Long.parseLong(String.valueOf(t));
+            }
+            else if (s[i] < t[i]) {
+                for (int j = (len - 1) / 2; j >= 0; j--) {
+                    if (t[j] != '0') {
+                        t[j]--;
+                        break;
+                    }
+                }
+                
+                if (t[0] == '0') {
+                    t = new char[len-1];
+                    Arrays.fill(t, '9');
+                }
+                else{ 
+                    for (int k = 0; k < len; k++) {
+                        t[len-1-k] = t[k];
+                    }
+                }
+                return Long.parseLong(String.valueOf(t));    
+            }
+        }
+        return Long.parseLong(String.valueOf(t));      
+    }
+    
+}
