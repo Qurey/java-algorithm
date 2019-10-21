@@ -1,0 +1,48 @@
+class Solution {
+    public int findCircleNum(int[][] M) {
+        UF uf = new UF(M.length);
+        for (int i = 0; i < M.length; i++) {
+            for (int j = i+1; j < M[0].length; j++) {
+                if (M[i][j] == 1) {
+                    uf.union(i, j);
+                }
+            }
+        }
+        return uf.size;
+        
+    }
+}
+
+class UF {
+    int[] A;
+    int size;
+    
+    public UF(int size) {
+        A = new int[size];
+        for (int i = 0; i < size; i++) {
+            A[i] = i;
+        }
+        this.size = size; 
+    } 
+    
+    public int root(int num) {
+        while (A[num] != num) {
+            A[num] = A[A[num]];
+            num = A[num];
+        }
+        return num;
+    }
+    
+    public boolean isConnect(int a, int b) {
+        return root(a) == root(b);
+    }
+    
+    public void union(int a, int b) {
+        int root1 = root(a);
+        int root2 = root(b);
+        if (root1 != root2) {
+            A[root1] = root2;
+            size = size - 1;
+        }
+    }
+}
