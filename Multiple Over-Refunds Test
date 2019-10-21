@@ -1,0 +1,203 @@
+//information of transaction
+class Transaction {
+    int id;
+    String operation;
+    int amount;
+    String time;
+
+    public Transaction(int id, String operation, int amount, String time) {
+        this.id = id;
+        this.operation = operation;
+        this.amount = amount;
+        this.time = time;
+    }
+}
+
+//state of the card
+class State {
+    int id;
+    String state;
+    int affirmCredit;
+    int unusedAffirmCredit;
+    int userCredit;
+    String time;
+
+    public State(int id, String state, int affirmCredit, int unusedAffirmCredit, int userCredit, String time) {
+        this.id = id;
+        this.state = state;
+        this.affirmCredit = affirmCredit;
+        this.unusedAffirmCredit = unusedAffirmCredit;
+        this.userCredit = userCredit;
+        this.time = time;
+    }
+}
+class Result {
+
+    /*
+     * Complete the 'amounts_to_return_to_users_for_date' function below.
+     *
+     * The function is expected to return a STRING_ARRAY.
+     * The function accepts STRING_ARRAY date_and_transaction_activities as parameter.
+     */
+
+    public static List<String> amounts_to_return_to_users_for_date(List<String> date_and_transaction_activities) {
+        List<Transaction> transactions = new ArrayList<>();
+        HashMap<Integer, State> map = new HashMap<>();
+        List<String> res = new ArrayList<>();
+        String currentDate = date_and_transaction_activities.get(0);
+        for (int i = 1; i < date_and_transaction_activities.size(); i++) {
+            String s = date_and_transaction_activities.get(i);
+            String[] activities = s.split(",");
+            transactions.add(new Transaction(
+                Integer.parseInt(activities[0]), 
+                activities[1], 
+                Integer.parseInt(activities[2]), 
+                activities[3]));
+        }
+        Collections.sort(transactions, (a, b) -> compareTime(a, b));
+        for (Transaction transaction : transactions) {
+            if (transaction.operation.equals("Creation")) {
+                String stateTime = transaction.time.split(" ")[0];
+                if (compareDate(currentDate, transaction.time) < 0) {
+                    stateTime = currentDate;
+                }
+                map.put(transaction.id, new State(
+                    transaction.id, transaction.operation, 
+                    transaction.amount, transaction.amount, 0, stateTime));
+            }
+
+            else if (transaction.operation.equals("Load")) {
+                if (map.get(transaction.id).state.equals("Creation")) {
+                    State tmp = map.get(transaction.id);
+                    tmp.userCredit += transaction.amount;
+                    map.put(transaction.id, tmp);
+                }
+                else if(map.get(transaction.id).state.equals("Purchase")) {
+                    State tmp = map.get(transaction.id);
+                    if (tmp.unusedAffirmCredit < tmp.affirmCredit) {
+                        if (tmp.affirmCredit - tmp.unusedAffirmCredit >= transaction.amount) {
+                            tmp.unusedAffirmCredit += transaction.amount;
+                        }
+                        else {
+                            tmp.userCredit += transaction.amount - (tmp.affirmCredit - tmp.unusedAffirmCredit);
+                            tmp.unusedAffirmCredit = tmp.affirmCredit;
+                        }
+                    }
+                    else {
+                        tmp.userCredit += transaction.amount;
+                    }
+
+                    if (compareDate(currentDate, transaction.time) >= 0) {
+                        if (tmp.userCredit > 0) {
+                            if (compareDate(tmp.time, transaction.time) > 0 
+                            && !tmp.time.equals(currentDate)) {
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(transaction.id);
+                                sb.append("**");
+                                sb.append(tmp.userCredit);
+                                res.add(sb.toString());
+                                tmp.userCredit = 0;
+                            }
+                        }
+                        tmp.time = transaction.time.split(" ")[0];
+                    }
+                    else {
+                        tmp.userCredit = 0;
+                    }
+
+                    map.put(transaction.id, tmp);
+                }
+            }
+
+            else if (transaction.operation.equals("Purchase")) {
+                State tmp = map.get(transaction.id);
+                tmp.state = transaction.operation;
+                if (tmp.unusedAffirmCredit >= transaction.amount) {
+                    tmp.unusedAffirmCredit -= transaction.amount;
+                }
+                else {
+                    tmp.userCredit -= transaction.amount - tmp.unusedAffirmCredit;
+                    tmp.unusedAffirmCredit = 0;
+                }
+
+                if (compareDate(currentDate, transaction.time) >= 0) {
+                    if (tmp.userCredit > 0) {
+                        if (compareDate(tmp.time, transaction.time) > 0 
+                        && !tmp.time.equals(currentDate)) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(transaction.id);
+                            sb.append("**");
+                            sb.append(tmp.userCredit);
+                            res.add(sb.toString());
+                            tmp.userCredit = 0;
+                        }
+                    }
+                    tmp.time = transaction.time.split(" ")[0];
+                }
+                else {
+                    tmp.userCredit = 0;
+                }
+                map.put(transaction.id, tmp);
+            }
+        }
+
+        for (int id : map.keySet()) {
+            State creditState = map.get(id);
+            if (creditState.state.equals("Purchase") && creditState.userCredit > 0) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(id);
+                sb.append("**");
+                sb.append(creditState.userCredit);
+                res.add(sb.toString());
+            }
+        }
+        return res;
+
+    }
+
+    //comparator used to sort the transaction
+    public static int compareTime(Transaction a, Transaction b) {
+        String[] timestampA = a.time.split(" ");
+        String[] yearA = timestampA[0].split("-");
+        String[] timeA = timestampA[1].split(":");
+        String[] timestampB = b.time.split(" ");
+        String[] yearB = timestampB[0].split("-");
+        String[] timeB = timestampB[1].split(":");
+
+        for (int i = 0; i < 3; i++) {
+            if (Integer.parseInt(yearA[i]) > Integer.parseInt(yearB[i])) {
+                return 1;
+            }
+            else if (Integer.parseInt(yearA[i]) < Integer.parseInt(yearB[i])) {
+                return -1;
+            }
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if (Integer.parseInt(timeA[i]) > Integer.parseInt(timeB[i])) {
+                return 1;
+            }
+            else if (Integer.parseInt(timeA[i]) < Integer.parseInt(timeB[i])) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    public static int compareDate(String currentDate, String activityTimestamp) {
+        String[] activity = activityTimestamp.split(" ");
+        String[] currentTime = currentDate.split("-");
+        String[] activityTime = activity[0].split("-");
+
+        for (int i = 0; i < 3; i++) {
+            if (Integer.parseInt(currentTime[i]) > Integer.parseInt(activityTime[i])) {
+                return -1;
+            }
+            else if (Integer.parseInt(currentTime[i]) < Integer.parseInt(activityTime[i])) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+}
