@@ -1,0 +1,73 @@
+import java.util.*;
+
+public class Behaviour {
+    public static void main(String[] args) {
+        String[] logs = new String[]{"100,1000,A", "200,1003,A", "300,1009,B",
+                "100,1026,B", "100,1030,C", "200,1190,B", "200,1503,A"};
+        behaviourTree(Arrays.asList(logs));
+    }
+
+    static class Node {
+        String val;
+        int count;
+        TreeMap<String, Node> map;
+
+        public Node(String val, int count, TreeMap<String, Node> map) {
+            this.val = val;
+            this.count = count;
+            this.map = map;
+        }
+    }
+
+    static class Trie {
+        Node root;
+
+        public Trie() {
+            root = new Node("", 0, new TreeMap<>());
+        }
+
+        public void insert(List<String> lists) {
+            Node cur = root;
+            if (lists == null || lists.size() < 1) {
+                return;
+            }
+            for (String s : lists) {
+                if (!cur.map.containsKey(s)) {
+                    cur.map.put(s, new Node(s, 1, new TreeMap<>()));
+                }
+                else {
+                    cur.map.get(s).count = cur.map.get(s).count + 1;
+                }
+                cur = cur.map.get(s);
+            }
+        }
+    }
+
+    public static void behaviourTree(List<String> logs) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        Trie trie = new Trie();
+        for (String s : logs) {
+            String[] log = s.split(",");
+            List<String> tmp = map.getOrDefault(log[0], new ArrayList<>());
+            tmp.add(log[2]);
+            map.put(log[0], tmp);
+        }
+
+        for (String s : map.keySet()) {
+            trie.insert(map.get(s));
+        }
+        dfs(trie.root, "");
+    }
+
+    public static void dfs(Node root, String levelSoFar) {
+        if (root.map == null || root.map.size() < 1) {
+            return;
+        }
+
+        for (String s : root.map.keySet()) {
+            Node cur = root.map.get(s);
+            System.out.println(levelSoFar + "|---" + cur.val + "(" + cur.count + ")");
+            dfs(cur, levelSoFar + "|\t");
+        }
+    }
+}
