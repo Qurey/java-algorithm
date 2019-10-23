@@ -1,0 +1,43 @@
+import java.util.*;
+
+public class EmployeeOrganization {
+    public static void main(String[] args) {
+        int[][] organizations = new int[][]{{2, 1}, {1, 0}, {3, 0}, {0, 0}};
+        parseOrg(organizations);
+    }
+
+    public static void parseOrg(int[][] organizations) {
+        Map<Integer, HashSet<Integer>> map = new HashMap<>();
+        Map<Integer, Integer> inDegree = new HashMap<>();
+        for (int[] organization : organizations) {
+            if (organization[0] != organization[1]) {
+                HashSet<Integer> tmp = map.getOrDefault(organization[1], new HashSet<>());
+                tmp.add(organization[0]);
+                map.put(organization[1], tmp);
+                inDegree.put(organization[0], inDegree.getOrDefault(organization[0], 0) + 1);
+                inDegree.put(organization[1], inDegree.getOrDefault(organization[1], 0));
+            }
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        for (int num : inDegree.keySet()) {
+            if (inDegree.get(num) == 0) {
+                q.add(num);
+            }
+        }
+        dfs(map, q.peek(), "");
+
+    }
+
+    public static void dfs(Map<Integer, HashSet<Integer>> map, int id, String levelSoFar) {
+        System.out.println(levelSoFar + id);
+        HashSet<Integer> tmp = map.get(id);
+        if (tmp == null || tmp.size() < 1) {
+            return;
+        }
+        for (int num : tmp) {
+            dfs(map, num, levelSoFar + "|__");
+        }
+
+    }
+}
