@@ -1,0 +1,78 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+
+public class Blacklist {
+    public static void main(String[] args) {
+        List<String> blackList = new ArrayList<>(Arrays.asList(new String[]{"machine gun", "world war i"}));
+        System.out.println(checkBlackList(blackList, "i love world war i"));
+        System.out.println(checkBlackList(blackList, "machine gun ii"));
+    }
+
+    public static boolean checkBlackList(List<String> blackList, String phase) {
+        Trie trie = new Trie();
+        for (String s : blackList) {
+            trie.insert(s.split(" "));
+        }
+
+        String[] words = phase.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            if (trie.search(words, i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static class Node {
+        String word;
+        boolean phaseEnd;
+        HashMap<String, Node> map;
+        public Node(String word, boolean phaseEnd, HashMap<String, Node> map) {
+            this.word = word;
+            this.phaseEnd = phaseEnd;
+            this.map = map;
+        }
+    }
+
+
+    static class Trie {
+        Node root;
+
+        public Trie() {
+            root = new Node("", false, new HashMap<>());
+        }
+
+        public void insert(String[] words) {
+            Node cur = root;
+            for (String s : words) {
+                if (!cur.map.containsKey(s)) {
+                    cur.map.put(s, new Node(s, false, new HashMap<>()));
+                }
+                cur = cur.map.get(s);
+            }
+            cur.phaseEnd = true;
+        }
+
+        public boolean search(String[] words, int start) {
+            if (words == null || words.length == 0 || start < 0 || start >= words.length) {
+                return false;
+            }
+            Node cur = root;
+
+            for (int i = start; i < words.length; i++) {
+                if (!cur.map.containsKey(words[i])) {
+                    return false;
+                }
+                if (cur.map.get(words[i]).phaseEnd) {
+                    return true;
+                }
+                cur = cur.map.get(words[i]);
+            }
+            return false;
+        }
+
+    }
+}
