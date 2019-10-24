@@ -1,0 +1,33 @@
+public class Read8k {
+    static int ptr = 0;
+    static int count = 0;
+    static char[] buffer = new char[8*1024];
+    public static int getLine(char buf[]) {
+        int num = 0;
+        while (true) {
+            if (ptr == 0) {
+                count = read8K(buffer);
+            }
+            if (count == 0) {
+                break;
+            }
+            if (buffer[ptr] != '\n') {
+               buf[num++] = buffer[ptr++];
+               if (ptr == count) {
+                   ptr = 0;
+               }
+            }
+            else {
+                ptr++;
+                break;
+            }
+        }
+
+        return num;
+    }
+
+    public static int read8K(char[] buf) {
+        return 1;
+    }
+
+}
