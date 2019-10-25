@@ -1,0 +1,47 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+public class KSum {
+
+    public static List<List<Integer>> sum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        backtracking(nums, target, 0, res, new ArrayList<>(), 0, new HashSet<>());
+        return res;
+    }
+
+    public static void backtracking(int[] nums, int target, int start, List<List<Integer>> res,
+                                    List<Integer> tmp, int sum, HashSet<List<Integer>> dict) {
+        if (sum == target) {
+            if (!dict.contains(tmp)) {
+                res.add(new ArrayList<>(tmp));
+                dict.add(new ArrayList<>(tmp));
+            }
+            return;
+        }
+        if (sum > target) {
+            return;
+        }
+
+        for (int i = start; i < nums.length; i++) {
+            tmp.add(nums[i]);
+            sum += nums[i];
+            backtracking(nums, target, i + 1, res, tmp, sum, dict);
+            sum -= tmp.get(tmp.size() - 1);
+            tmp.remove(tmp.size() - 1);
+        }
+
+    }
+
+
+
+    public static void main(String[] args) {
+        int[] nums = new int[]{1, 1, 2, 2, 3, 4, 5, 6, 7};
+        for (List<Integer> t : sum(nums, 8)) {
+            for (int i : t) {
+                System.out.print(i + " ");
+            }
+            System.out.println();
+        }
+    }
+}
