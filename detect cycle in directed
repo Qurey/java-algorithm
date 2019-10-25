@@ -1,0 +1,89 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Graph {
+    private final int V;
+    private final List<List<int[]>> adj;
+
+    public Graph(int V)
+    {
+        this.V = V;
+        adj = new ArrayList<>(V);
+
+        for (int i = 0; i < V; i++)
+            adj.add(new LinkedList<>());
+    }
+
+    // This function is a variation of DFSUytil() in
+    // https://www.geeksforgeeks.org/archives/18212
+    private boolean isCyclicUtil(int i, boolean[] visited,
+                                 boolean[] recStack, List<Integer> lists)
+    {
+        if (recStack[i]) {
+            return true;
+        }
+
+        if (visited[i]) {
+            return false;
+        }
+
+        recStack[i] = true;
+        visited[i] = true;
+        lists.add(i);
+
+        for (int[] h : adj.get(i)) {
+            if (isCyclicUtil(h[0], visited, recStack, lists)) {
+                return true;
+            }
+        }
+
+        recStack[i] = false;
+        lists.remove(i);
+        return false;
+
+    }
+
+    private void addEdge(int source, int dest, int weight) {
+        adj.get(source).add(new int[]{dest, weight});
+    }
+
+    // Returns true if the graph contains a
+    // cycle, else false.
+    // This function is a variation of DFS() in
+    // https://www.geeksforgeeks.org/archives/18212
+    private boolean isCyclic()
+    {
+        boolean visited[] = new boolean[V];
+        boolean source[] = new boolean[V];
+        LinkedList<Integer> trace = new LinkedList<>();
+        for (int i = 0; i < V; i++) {
+            if (isCyclicUtil(i, visited, source, trace)) {
+                for (int k : trace) {
+                    System.out.println(k);
+                }
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    // Driver code
+    public static void main(String[] args)
+    {
+        Graph graph = new Graph(7);
+        graph.addEdge(0, 1, 1);
+        graph.addEdge(0, 2, 2);
+        graph.addEdge(1, 2, 3);
+        graph.addEdge(0, 4, 4);
+        graph.addEdge(4, 5, 5);
+        graph.addEdge(5, 0, 6);
+
+        if(graph.isCyclic())
+            System.out.println("Graph contains cycle");
+        else
+            System.out.println("Graph doesn't "
+                    + "contain cycle");
+    }
+}
