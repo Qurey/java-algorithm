@@ -1,0 +1,41 @@
+class Solution {
+    class Node{
+        Node left, right;
+        int val, sum, dup = 1;
+        public Node(int val, int sum) {
+            this.val = val;
+            this.sum = sum;
+        }
+    }
+    public List<Integer> countSmaller(int[] nums) {
+        Integer[] res = new Integer[nums.length];
+        Node root = null;
+        for (int i = nums.length-1; i >= 0; i--) {
+            root = insert(root, res, i, nums, 0);
+        }
+        return Arrays.asList(res);
+        
+    }
+    
+    public Node insert(Node root, Integer[] res, int index, int[] nums, int preSum) {
+        if (root == null) {
+            res[index] = preSum;
+            return new Node(nums[index], 0);
+        }
+        
+        if (root.val == nums[index]) {
+            root.dup = root.dup + 1;
+            res[index] = preSum + root.sum;
+        
+        }
+        else if (root.val > nums[index]) {
+            root.sum = root.sum + 1;
+            root.left = insert(root.left, res, index, nums, preSum);
+        }
+        else {
+            root.right = insert(root.right, res, index, nums, preSum + root.dup + root.sum);
+        }
+        return root;
+       
+    }
+}
