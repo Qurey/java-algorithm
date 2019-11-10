@@ -1,0 +1,43 @@
+class Solution {
+    public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> res = new ArrayList<>();
+        HashMap<String, List<String>> map = new HashMap<>();
+        generateWordList(map, words);
+        dfs(map, words, res, new ArrayList<>(), 0);
+        return res;
+        
+    }
+    
+    public void dfs(Map<String, List<String>> map, String[] words, List<List<String>> ans, List<String> tmp, int step) {
+        if (tmp.size() == words[0].length()) {
+            ans.add(new ArrayList<>(tmp));
+            return;
+        }
+        StringBuilder prefix = new StringBuilder();
+        for (int i = 0; i < tmp.size(); i++) {
+            prefix.append(tmp.get(i).charAt(step));
+        }
+        List<String> dict = map.get(prefix.toString());
+        if (dict != null && dict.size() > 0) {
+            for (String word : dict) {
+                tmp.add(word);
+                dfs(map, words, ans, tmp, step+1);
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+        
+    }
+    
+    public void generateWordList(HashMap<String, List<String>> map, String[] words) {
+        map.put("", new ArrayList<>());
+        for (String word : words) {
+            for (int i = 1; i <= word.length(); i++) {
+                List<String> tmp = map.getOrDefault(word.substring(0, i), new ArrayList<>());
+                tmp.add(word);
+                map.put(word.substring(0, i), tmp);
+            }
+            map.get("").add(word);
+        }
+        
+    }
+}
