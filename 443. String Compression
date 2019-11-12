@@ -1,0 +1,27 @@
+class Solution {
+    public int compress(char[] chars) {
+        int count = 0;
+        int index = 0;
+        while (index < chars.length) {
+            chars[count] = chars[index];
+            count++;
+            if (index == chars.length-1 || chars[index+1] != chars[index]) {
+                index++;
+                continue;
+            }
+            int tmp = 1;
+            index++;
+            while (index < chars.length && chars[index] == chars[index-1]) {
+                index++;
+                tmp++;
+            }
+            int loc = 0, num = tmp;
+            while (num > 0) {
+                chars[count++] = Integer.toString(tmp).toCharArray()[loc++];
+                num = num / 10;
+            } 
+        }
+        return count;
+        
+    }
+}
