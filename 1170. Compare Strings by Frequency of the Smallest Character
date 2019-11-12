@@ -1,0 +1,47 @@
+class Solution {
+    public int[] numSmallerByFrequency(String[] queries, String[] words) {
+        int[] res = new int[queries.length];
+        TreeMap<Integer, Integer> freqMap = new TreeMap<>((a, b) -> (b-a));
+        for(String word : words) {
+            int[] dict = new int[26];
+            char minChar = 'z';
+            for (char c : word.toCharArray()) {
+                if (c < minChar) {
+                    minChar = c;
+                }
+                dict[c - 'a']++;
+            }
+            freqMap.put(dict[minChar - 'a'], freqMap.getOrDefault(dict[minChar - 'a'], 0) + 1);
+        }
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int index = 0;
+        for (String query : queries) {
+            int[] dict = new int[26];
+            char min = 'z';
+            for (char c : query.toCharArray()) {
+                if (c < min) {
+                    min = c;
+                }
+                dict[c - 'a']++;
+            }
+            if (map.containsKey(dict[min - 'a'])) {
+                res[index++] = map.get(dict[min - 'a']);
+                continue;
+            }
+            int sum = 0;
+            for (int key : freqMap.keySet()) {
+                if (key > dict[min - 'a']) {
+                    System.out.println(key);
+                    sum += freqMap.get(key);
+                }
+                else {
+                    map.put(dict[min - 'a'], sum);
+                    break;
+                }
+            }
+            res[index++] = sum;
+        }
+        return res;
+        
+    }
+}
