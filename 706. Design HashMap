@@ -1,0 +1,100 @@
+class MyHashMap {
+    
+    class ListNode {
+        int key;
+        int val;
+        ListNode next;
+        public ListNode(int key, int val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
+    ListNode[] buckets;
+
+    /** Initialize your data structure here. */
+    public MyHashMap() {
+        buckets = new ListNode[10000];
+    }
+    
+    /** value will always be non-negative. */
+    public void put(int key, int val) {
+        int idx = getHash(key);
+        ListNode start = buckets[idx];
+        if (start == null) {
+            buckets[idx] = new ListNode(key, val);
+            return;
+        }
+        ListNode pre = findKey(key, start);
+        if (pre == null) {
+            buckets[idx].val = val;
+        }
+        else if (pre.next != null){
+            pre.next.val = val;
+        }
+        else {
+             pre.next = new ListNode(key, val);
+        }
+    }
+    
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    public int get(int key) {
+        int idx = getHash(key);
+        ListNode start = buckets[idx];
+        if (start == null) {
+            return -1;
+        }
+        ListNode res = findKey(key, start);
+        if (res == null) {
+            return start.val;
+        }
+        else if (res.next == null) {
+            return -1;
+        }
+        else {
+            return res.next.val;
+        }
+        
+    }
+    
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    public void remove(int key) {
+        int idx = getHash(key);
+        ListNode start = buckets[idx];
+        if (start == null) {
+            return;
+        }
+        ListNode pre = findKey(key, start);
+        if (pre == null) {
+            buckets[idx] = buckets[idx].next;
+        } 
+        else if (pre.next == null) {
+            return;
+        }
+        else {
+            pre.next = pre.next.next;
+        }
+    }
+    
+    
+    
+    public ListNode findKey(int key, ListNode head) {
+        ListNode pre = null;
+        while (head != null && head.key != key) {
+            pre = head;
+            head = head.next;
+        }
+        return pre;
+    }
+    
+    public int getHash(int key) {
+        return Integer.hashCode(key) % buckets.length;
+    }
+}
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap obj = new MyHashMap();
+ * obj.put(key,value);
+ * int param_2 = obj.get(key);
+ * obj.remove(key);
+ */
